@@ -5,7 +5,7 @@ if [ "$(command -v endaft)" == "" ]; then
     dart pub global activate endaft >>/dev/null
 
     # Helpful for installing endaft from a local source. You probably don't want to use this
-    # dart pub global activate --source path "/home/user/Source/endaft/endaft-cli" >>/dev/null
+    # dart pub global activate --source path "/home/user/Source/endaft/cli" >>/dev/null
 fi
 
 endaft build
