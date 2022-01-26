@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'tasks/all.dart';
 
-class SharedCommand extends DfatCommand {
+class SharedCommand extends EnDaftCommand {
   @override
   final name = "shared";
 

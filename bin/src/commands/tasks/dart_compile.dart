@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class DartCompileTask extends TaskCommand {
-  DartCompileTask(DfatCommand parent, Logger logger)
+  DartCompileTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
   static String taskName = 'dart-compile';

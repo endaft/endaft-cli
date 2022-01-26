@@ -4,7 +4,7 @@ import 'package:path/path.dart' as path;
 
 import 'tasks/all.dart';
 
-class LambdaCommand extends DfatCommand {
+class LambdaCommand extends EnDaftCommand {
   @override
   final name = "lambda";
 

@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class CheckFSTask extends TaskCommand {
-  CheckFSTask(DfatCommand parent, Logger logger)
+  CheckFSTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
   static String taskName = 'check-fs';

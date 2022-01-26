@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class DockerRunTask extends TaskCommand {
-  DockerRunTask(DfatCommand parent, Logger logger)
+  DockerRunTask(EnDaftCommand parent, Logger logger)
       : super(
             parent,
             logger,

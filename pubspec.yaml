@@ -1,15 +1,15 @@
-name: dfat
-description: Operations and utilities for the DFAT (Dart, Flutter, AWS, Terraform) solution templates.
+name: endaft
+description: Operations and utilities for the enDaft (Dart, AWS, Flutter, Terraform) solution templates.
 version: 1.0.7
-homepage: https://pub-dev.dicatania.me/dfat/
-repository: https://github.com/GioCirque/pub-dev
-issue_tracker: https://github.com/GioCirque/pub-dev/issues
+homepage: https://endaft.dev/
+repository: https://github.com/endaft/endaft-cli
+issue_tracker: https://github.com/endaft/endaft-cli/issues
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
 
 executables:
-  dfat:
+  endaft:
 
 dependencies:
   meta: ^1.7.0
@@ -17,7 +17,7 @@ dependencies:
   args: ^2.3.0
   tint: ^2.0.0
   yaml: ^3.1.0
-  archive: ^3.1.8
+  archive: ^3.1.9
   equatable: ^2.0.3
   collection: ^1.15.0
   json_schema2: ^2.0.1

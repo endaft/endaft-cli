@@ -6,7 +6,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class UpdateSchemasTask extends TaskCommand {
-  UpdateSchemasTask(DfatCommand parent, Logger logger)
+  UpdateSchemasTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
   static String taskName = 'update-schemas';

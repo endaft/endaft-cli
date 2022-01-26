@@ -4,12 +4,12 @@ import 'package:path/path.dart' as path;
 
 import 'tasks/all.dart';
 
-class DockerCommand extends DfatCommand {
+class DockerCommand extends EnDaftCommand {
   @override
   final name = "docker";
 
   @override
-  final description = "Runs a build in a DFAT docker image,"
+  final description = "Runs a build in a EnDaft docker image,"
       "building the image first if needed.";
 
   @override

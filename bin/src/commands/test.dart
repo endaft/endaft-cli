@@ -1,11 +1,8 @@
 import 'dart:collection';
-import 'dart:io';
-
-import 'package:path/path.dart' as path;
 
 import 'tasks/all.dart';
 
-class TestCommand extends DfatCommand {
+class TestCommand extends EnDaftCommand {
   @override
   final name = "test";
 

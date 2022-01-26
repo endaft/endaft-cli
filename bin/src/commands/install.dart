@@ -1,6 +1,6 @@
 import 'tasks/all.dart';
 
-class InstallCommand extends DfatCommand {
+class InstallCommand extends EnDaftCommand {
   @override
   final name = "install";
 
@@ -15,7 +15,7 @@ class InstallCommand extends DfatCommand {
 
   @override
   List<TaskCommand> revealTasks() => [
-        InstallDfatFilesTask(this, logger),
+        InstallEnDaftFilesTask(this, logger),
         UpdateSchemasTask(this, logger),
       ];
 
@@ -23,7 +23,7 @@ class InstallCommand extends DfatCommand {
   Future<bool> run() async {
     final blockLogger = logger.headerBlock("Install");
     useSequence([
-      InstallDfatFilesTask(this, blockLogger),
+      InstallEnDaftFilesTask(this, blockLogger),
       UpdateSchemasTask(this, blockLogger),
     ]);
     final result = await runSequence();

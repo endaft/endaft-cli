@@ -9,20 +9,20 @@ import 'run_sh.dart';
 /// Represents a collection of known assets
 class Assets {
   /// The lambda IaC JSON schema
-  static AssetString get schemaLambda =>
-      AssetString.from(iacLambdaSchema, '.dfat/schemas/iac.lambda.schema.json');
+  static AssetString get schemaLambda => AssetString.from(
+      iacLambdaSchema, '.endaft/schemas/iac.lambda.schema.json');
 
   /// The shared IaC JSON schema
-  static AssetString get schemaShared =>
-      AssetString.from(iacSharedSchema, '.dfat/schemas/iac.shared.schema.json');
+  static AssetString get schemaShared => AssetString.from(
+      iacSharedSchema, '.endaft/schemas/iac.shared.schema.json');
 
   /// The Amazon Linux 2 dockerfile for building
   static AssetString get dockerAmznL2 =>
-      AssetString.from(dockerAmznLinux2, '.dfat/Dockerfile.dfat.al2');
+      AssetString.from(dockerAmznLinux2, '.endaft/Dockerfile.al2');
 
   /// The `run.sh` file used in the docker container
   static AssetString get dockerRunScript =>
-      AssetString.from(dockerRunSh, '.dfat/run.sh');
+      AssetString.from(dockerRunSh, '.endaft/run.sh');
 }
 
 /// Represents a string-base asset

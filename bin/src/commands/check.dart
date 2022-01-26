@@ -1,11 +1,11 @@
 import 'tasks/all.dart';
 
-class CheckCommand extends DfatCommand {
+class CheckCommand extends EnDaftCommand {
   @override
   final name = "check";
 
   @override
-  final description = "Checks your environment for DFAT required tools.";
+  final description = "Checks your environment for EnDaft required tools.";
 
   @override
   String get category => 'General';
@@ -45,7 +45,7 @@ class CheckCommand extends DfatCommand {
     if (!result) {
       logger.printWarn(
           'Some errors can be fixed automatically using the '
-          '${'dfat check --fix'.bold()}.',
+          '${'endaft check --fix'.bold()}.',
           inBl);
     }
 

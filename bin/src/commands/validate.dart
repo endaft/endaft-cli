@@ -1,6 +1,6 @@
 import 'tasks/all.dart';
 
-class ValidateCommand extends DfatCommand {
+class ValidateCommand extends EnDaftCommand {
   @override
   final name = "validate";
 

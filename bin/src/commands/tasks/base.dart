@@ -41,7 +41,7 @@ abstract class TaskCommand extends Command<bool> {
   String get targetDir => args.containsKey('target') ? args['target'] : rootDir;
 
   @override
-  final DfatCommand parent;
+  final EnDaftCommand parent;
 
   /// Gets the arguments available to this task from the parent command.
   Map<String, dynamic> get args => _args;

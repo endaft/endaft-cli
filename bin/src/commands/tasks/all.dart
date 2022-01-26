@@ -8,7 +8,7 @@ export 'dart_compile.dart';
 export 'dart_test.dart';
 export 'docker_build.dart';
 export 'docker_run.dart';
-export 'install_dfat_files.dart';
+export 'install_endaft_files.dart';
 export 'pub_get.dart';
 export 'update_schemas.dart';
 export 'validate_json.dart';

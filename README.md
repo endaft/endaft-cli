@@ -1,35 +1,35 @@
-# dfat
+# EnDaft
 
-Operations and utilities for the DFAT (Dart, Flutter, AWS, Terraform) solution templates.
+Operations and utilities for the EnDaft (Dart, Flutter, AWS, Terraform) solution templates.
 
 ## Installation
 
 ```shell
-dart pub global activate dfat
+dart pub global activate endaft
 ```
 
 ## Operation
 
-[Check out the examples](./example/example.md)
+[Check out the examples](https://github.com/endaft/endaft-cli/example/example.md)
 
 ## A First Build
 
-Below is an example of `dfat` output on an initial build when it has to create the docker builder first.
+Below is an example of `endaft` output on an initial build when it has to create the docker builder first.
 
 ```shell
-❯ dfat build
+❯ endaft build
 
 🤖 Processing Docker Build
-   🧱 Building dfat-lambda-api-builder image =>
+   🧱 Building endaft-lambda-api-builder image =>
       🔵 sha256:771a4fb143c3861eb36c63f04be09cf5b81e2f1505f47aaad96e94701dd6bc9b
-   🧱 Building dfat-lambda-api-builder image........✅
+   🧱 Building endaft-lambda-api-builder image........✅
 🏁 Finished Docker Build
-🐳 Running in dfat-lambda-api-builder...............✅
+🐳 Running in endaft-lambda-api-builder...............✅
 
 🤖 Processing Checks
    👀 Looking for dart..............................✅
    👀 Looking for git...............................✅
-   📂 Checking for Dockerfile.dfat.al2..............✅
+   📂 Checking for Dockerfile.endaft.al2..............✅
    📂 Checking for run.sh...........................✅
 🏁 Finished Checks
 

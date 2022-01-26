@@ -8,8 +8,8 @@ export '../enums.dart';
 
 typedef ArgsProvider = Map<String, dynamic>? Function(String taskName);
 
-abstract class DfatCommand extends Command<bool> {
-  DfatCommand({required this.tools, required this.logger}) {
+abstract class EnDaftCommand extends Command<bool> {
+  EnDaftCommand({required this.tools, required this.logger}) {
     var workDir = Directory.current.path;
     if (!argParser.allowsAnything) {
       argParser.addOption(
@@ -42,8 +42,8 @@ abstract class DfatCommand extends Command<bool> {
   }
 
   /// All commands known to the [runner]
-  List<DfatCommand> get allCommands =>
-      (runner?.commands.values ?? []).whereType<DfatCommand>().toList();
+  List<EnDaftCommand> get allCommands =>
+      (runner?.commands.values ?? []).whereType<EnDaftCommand>().toList();
 
   /// All [tools] from this commands [sequence]
   List<String> get allTools => [

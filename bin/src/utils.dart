@@ -48,10 +48,10 @@ class Utils {
 
   /// A map of expected [KnownPaths] relative to a workspace.
   static final Map<KnownPaths, String> relativePathRoots = {
-    KnownPaths.dfat: './.dfat',
+    KnownPaths.endaft: './.endaft',
     KnownPaths.iac: './iac',
     KnownPaths.lambdas: './lambdas',
-    KnownPaths.schemas: './.dfat/schemas',
+    KnownPaths.schemas: './.endaft/schemas',
     KnownPaths.shared: './shared',
     KnownPaths.assets: './shared/assets'
   };

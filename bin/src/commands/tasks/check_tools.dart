@@ -1,7 +1,7 @@
 import 'base.dart';
 
 class CheckToolsTask extends TaskCommand {
-  CheckToolsTask(DfatCommand parent, Logger logger)
+  CheckToolsTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
   @override

@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class DartTestTask extends TaskCommand {
-  DartTestTask(DfatCommand parent, Logger logger)
+  DartTestTask(EnDaftCommand parent, Logger logger)
       : super(
             parent,
             logger,

@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class BuildRunnerBuildTask extends TaskCommand {
-  BuildRunnerBuildTask(DfatCommand parent, Logger logger)
+  BuildRunnerBuildTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
   static String taskName = 'build-runner-build';

@@ -4,7 +4,7 @@ import 'package:json_schema2/json_schema2.dart';
 import 'base.dart';
 
 class ValidateJsonTask extends TaskCommand {
-  ValidateJsonTask(DfatCommand parent, Logger logger)
+  ValidateJsonTask(EnDaftCommand parent, Logger logger)
       : super(
             parent,
             logger,
@@ -24,7 +24,7 @@ class ValidateJsonTask extends TaskCommand {
 
   Future<bool> _validateSharedIaC() async {
     final closer = logger.printFixed("🧐 ${'shared'.green()} schema", inBl);
-    final schemaPath = '.dfat/schemas/iac.shared.schema.json';
+    final schemaPath = '.endaft/schemas/iac.shared.schema.json';
     final sharedSchema = Utils.readSchemaFile(schemaPath);
     final sharedFile =
         await Utils.findFiles(subPath: 'shared', matcher: RegExps.fileIaCJson)
@@ -51,7 +51,7 @@ class ValidateJsonTask extends TaskCommand {
   }
 
   Future<bool> _validateLambdaIaC() async {
-    final schemaPath = '.dfat/schemas/iac.lambda.schema.json';
+    final schemaPath = '.endaft/schemas/iac.lambda.schema.json';
     final lambdaSchema = Utils.readSchemaFile(schemaPath);
     final Map<String, List<ValidationError>> allErrors = {};
 

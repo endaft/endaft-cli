@@ -6,7 +6,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class ZipArchiveTask extends TaskCommand {
-  ZipArchiveTask(DfatCommand parent, Logger logger)
+  ZipArchiveTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
   static String taskName = 'zip-archive';

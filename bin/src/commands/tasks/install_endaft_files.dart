@@ -2,18 +2,18 @@ import 'dart:io';
 
 import 'base.dart';
 
-class InstallDfatFilesTask extends TaskCommand {
-  InstallDfatFilesTask(DfatCommand parent, Logger logger)
+class InstallEnDaftFilesTask extends TaskCommand {
+  InstallEnDaftFilesTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
-  static String taskName = 'install-dfat-files';
+  static String taskName = 'install-endaft-files';
 
   @override
-  String get name => InstallDfatFilesTask.taskName;
+  String get name => InstallEnDaftFilesTask.taskName;
 
   @override
   String get description =>
-      'Installs folders and files required by other dfat commands.';
+      'Installs folders and files required by other EnDaft commands.';
 
   final inRs = '   ';
 

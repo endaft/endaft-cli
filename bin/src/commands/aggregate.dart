@@ -7,12 +7,12 @@ import 'package:collection/collection.dart';
 import '../extensions.dart';
 import 'tasks/all.dart';
 
-class AggregateCommand extends DfatCommand {
+class AggregateCommand extends EnDaftCommand {
   @override
   final name = "aggregate";
 
   @override
-  final description = "Performs the DFAT deployment aggregation routine.";
+  final description = "Performs the EnDaft deployment aggregation routine.";
 
   @override
   String get category => 'Granular';

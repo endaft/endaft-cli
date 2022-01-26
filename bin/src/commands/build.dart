@@ -2,7 +2,7 @@ import 'package:args/args.dart';
 
 import 'tasks/all.dart';
 
-class BuildCommand extends DfatCommand {
+class BuildCommand extends EnDaftCommand {
   @override
   final name = "build";
 

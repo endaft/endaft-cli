@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class BuildRunnerCleanTask extends TaskCommand {
-  BuildRunnerCleanTask(DfatCommand parent, Logger logger)
+  BuildRunnerCleanTask(EnDaftCommand parent, Logger logger)
       : super(parent, logger, TaskRequirements());
 
   static String taskName = 'build-runner-clean';

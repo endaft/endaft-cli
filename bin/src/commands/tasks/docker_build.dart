@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'base.dart';
 
 class DockerBuildTask extends TaskCommand {
-  DockerBuildTask(DfatCommand parent, Logger logger)
+  DockerBuildTask(EnDaftCommand parent, Logger logger)
       : super(
             parent,
             logger,
@@ -30,8 +30,8 @@ class DockerBuildTask extends TaskCommand {
 
     final String imageName = args['name'];
     final rootDir = Directory.current.path;
-    final dfatDir = Utils.pathFromRoot(KnownPaths.dfat);
-    final dockerDir = path.relative(dfatDir);
+    final endaftDir = Utils.pathFromRoot(KnownPaths.endaft);
+    final dockerDir = path.relative(endaftDir);
 
     blockLogger.printBlock("🧱 Building ${imageName.green()} image", inRs);
     final dockerArgs = [
@@ -45,7 +45,7 @@ class DockerBuildTask extends TaskCommand {
       '-t',
       imageName,
       '-f',
-      'Dockerfile.dfat.al2',
+      'Dockerfile.al2',
       '.'
     ];
 
