@@ -44,6 +44,9 @@ class AssetString {
   /// but the file won't be overwritten.
   bool writeTo({File? file, String? chmod, bool noClobber = false}) {
     final safeFile = file ?? File(targetPath);
+    if (!safeFile.parent.existsSync()) {
+      safeFile.parent.createSync(recursive: true);
+    }
     if (!noClobber || !safeFile.existsSync()) {
       safeFile.writeAsStringSync(_contents);
     }
