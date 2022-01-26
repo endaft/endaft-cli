@@ -21,12 +21,8 @@ class InstallEnDaftFilesTask extends TaskCommand {
     String? reason;
     bool result = true;
     final closer = logger.printFixed('📝 Writing schema files', inRs);
-    final schemasDir = Utils.pathFromRoot(KnownPaths.schemas, rootDir);
 
     try {
-      if (!Directory(schemasDir).existsSync()) {
-        Directory(schemasDir).createSync(recursive: true);
-      }
       Assets.schemaLambda.writeTo();
       Assets.schemaShared.writeTo();
     } on FileSystemException catch (e) {
