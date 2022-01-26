@@ -1,3 +1,5 @@
+[![build](https://github.com/endaft/endaft-cli/actions/workflows/workflow_build.yml/badge.svg)](https://github.com/endaft/endaft-cli/actions/workflows/workflow_build.yml) [![deploy](https://github.com/endaft/endaft-cli/actions/workflows/workflow_deploy.yml/badge.svg)](https://github.com/endaft/endaft-cli/actions/workflows/workflow_deploy.yml)
+
 # EnDaft
 
 Operations and utilities for the EnDaft (Dart, Flutter, AWS, Terraform) solution templates.
