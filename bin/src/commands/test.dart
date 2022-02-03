@@ -28,14 +28,16 @@ class TestCommand extends EnDaftCommand {
       );
   }
 
+  String get style => argResults!['style'];
+
+  bool get coverage => argResults!['coverage'];
+
   @override
   List<TaskCommand> revealTasks() => [DartTestTask(this, logger)];
 
   @override
   Future<bool> run() async {
-    final blockLogger = logger.headerBlock("Test");
-    final covStyle = argResults!['style'];
-    final wantsCoverage = argResults!['coverage'];
+    final bLogger = logger.collapsibleBlock("🤖 Processing ${'Test'.green()}");
     final targets = Queue<String>.from(
         await Utils.findFiles(matcher: RegExps.filePubSpecYaml).toList().then(
             (files) => files
@@ -44,15 +46,17 @@ class TestCommand extends EnDaftCommand {
                     e.parent.parent.path.endsWith('lambdas'))
                 .map((e) => e.parent.path)
                 .toList()));
-    useSequence(targets.map((e) => DartTestTask(this, blockLogger)).toList());
+    useSequence(targets.map((e) => DartTestTask(this, bLogger)).toList());
     final result = await runSequenceSame((taskName) {
       return {
-        'style': covStyle,
-        'target': targets.removeFirst(),
-        'coverage': wantsCoverage,
+        'style': style,
+        'target': targets.removeLast(),
+        'coverage': coverage,
+        'indent': '   '
       };
     });
 
-    return blockLogger.close(result);
+    bLogger.footer('Test');
+    return result;
   }
 }

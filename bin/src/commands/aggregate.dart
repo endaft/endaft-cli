@@ -101,7 +101,7 @@ class AggregateCommand extends EnDaftCommand {
     List<String> namedProviders = ['facebook', 'google', 'amazon', 'apple'];
     sharedIaC.remove(r"$schema");
     final cognito = sharedIaC.takeOr<Map<String, dynamic>>('cognito');
-    if (cognito != null) {
+    if (cognito != null && cognito.takeOr<bool>('enabled', fallback: false)!) {
       sharedIaC["cognito_css_path"] = cognito.takeOr<String>('css_path');
       sharedIaC["cognito_logo_path"] = cognito.takeOr<String>('logo_path');
       final idPs = cognito.takeOr<Map<String, dynamic>>('identity_providers');
@@ -116,6 +116,8 @@ class AggregateCommand extends EnDaftCommand {
         }
         sharedIaC['identity_providers'] = providers;
       }
+    } else {
+      sharedIaC['anonymous'] = true;
     }
     return sharedIaC;
   }
