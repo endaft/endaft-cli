@@ -8,17 +8,59 @@ on:
       - closed
 
 jobs:
-  cli:
+  core:
     name: 🤖 cli
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: 👇 Checkout
         uses: actions/checkout@v2
-      - name: Setup Dart
+
+      - name: 📦 Setup Dart
+        if: ${{ !env.ACT }}
         uses: dart-lang/setup-dart@v1
-      - name: Setup LCOV
+
+      - name: 📦 Setup LCOV
+        if: ${{ !env.ACT }}
         uses: hrishikesh-kadam/setup-lcov@v1
 
-      - name: 👷 Build cli
+      - name: ✍🏼 Version
+        id: version
+        uses: endaft/action-yamler@v1.0.9
+        with:
+          file: ./pubspec.yaml
+          path: version
+          set: ${{ format('-dev.{0}', github.run_number) }}
+          get: true
+          append: true
+
+      - name: 👷 Make
+        if: ${{ !env.ACT }}
         run: make all
+
+      - name: 🏷 Tags
+        uses: endaft/action-dev-tagger@v1.0.8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: ${{ format('v{0}-dev.', steps.version.outputs.value_old) }}
+          tag: ${{ format('v{0}-dev.{1}', steps.version.outputs.value_old, github.run_number) }}
+
+      - name: ✍🏼 Changelog
+        id: changelog
+        uses: endaft/action-changelog@v0.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config_file: .github/changelog-config.js
+
+      - name: ✍🏼 Prepend Changelog
+        uses: endaft/action-prepend@v0.0.9
+        with:
+          file_target: CHANGELOG.md
+          value_in: ${{ steps.changelog.outputs.changelog }}
+          is_file: "false"
+
+      - name: 🚀 Publish
+        if: ${{ !env.ACT }}
+        uses: RatakondalaArun/pub.dev-cd@v1.0.0
+        with:
+          creditionals: ${{secrets.PUB_DEV_CREDENTIALS}}
