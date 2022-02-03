@@ -120,9 +120,9 @@ class ValidateJsonTask extends TaskCommand {
 
   @override
   Future<bool> run() async {
-    final resultShared = await _validateSharedIaC();
-    final resultLambdas = await _validateLambdaIaC();
+    // final resultShared = await _validateSharedIaC();
+    // final resultLambdas = await _validateLambdaIaC();
     final resultRoutes = await _validateAPIRoutes();
-    return (resultShared && resultLambdas && resultRoutes);
+    return resultRoutes; // (resultShared && resultLambdas && resultRoutes);
   }
 }
