@@ -29,8 +29,14 @@ class DartTestTask extends TaskCommand {
 
   final inRs = '   ';
 
-  bool _runTests(bool useCoverage, String dirPath, String indent) {
+  bool _runTests(
+    BlockLogger logger,
+    bool useCoverage,
+    String dirPath,
+    String ind,
+  ) {
     final usesCover = useCoverage && Utils.isCommand('collect_coverage');
+    logger.printFixed('🏃 Running tests', ind);
 
     final List<String> dartArgs = [
       'run',
@@ -40,10 +46,11 @@ class DartTestTask extends TaskCommand {
     ];
     final tRes = Process.runSync('dart', dartArgs, workingDirectory: dirPath);
 
-    return Utils.handleProcessResult(tRes, logger, indent);
+    return Utils.handleProcessResult(tRes, logger, ind);
   }
 
   bool _formatLcov(
+    BlockLogger logger,
     bool useCoverage,
     String baseName,
     String ind,
@@ -54,7 +61,7 @@ class DartTestTask extends TaskCommand {
     // Early bail-out if there's nothing we can do here
     if (!usesCover) return true;
 
-    logger.printFixed('🧪 Formatting ${baseName.green()} coverage', ind);
+    logger.printFixed('🦾 Formatting coverage', ind);
     final List<String> formatArgs = [
       '--packages=.packages',
       '--base-directory=${path.normalize(dirPath)}',
@@ -78,11 +85,16 @@ class DartTestTask extends TaskCommand {
   }
 
   bool _formatHtml(
-      bool useCoverage, String baseName, String ind, String dirPath) {
+    BlockLogger logger,
+    bool useCoverage,
+    String baseName,
+    String ind,
+    String dirPath,
+  ) {
     // Early bail-out if there's nothing we can do here
     final hasGenHtml = Utils.isCommand('genhtml');
     if (hasGenHtml) {
-      logger.printFixed('🧪 Marking up ${baseName.green()} coverage', ind);
+      logger.printFixed('📝 Marking up coverage', ind);
       final List<String> markupArgs = [
         '-o',
         './coverage/report',
@@ -125,11 +137,12 @@ class DartTestTask extends TaskCommand {
     final ind = args['indent'] ?? inRs;
     final baseName = path.basename(dirPath);
     final useCoverage = args['coverage'] ?? true;
-    logger.printFixed('🧪 Testing ${baseName.green()}', ind);
+    final blkLogger =
+        logger.collapsibleBlock('🧪 Testing ${baseName.green()}', ind);
 
     final hasTestDir = Directory(path.join(targetDir, 'test')).existsSync();
     if (!hasTestDir) {
-      logger.printSkipped(logger.useMemo('missing test directory'));
+      blkLogger.printSkipped(blkLogger.useMemo('missing test directory'));
       return true;
     }
 
@@ -138,14 +151,30 @@ class DartTestTask extends TaskCommand {
                 Utils.getPubSpecValue(targetDir, 'dependencies.test')) !=
             null;
     if (!usesTests) {
-      logger.printSkipped(logger.useMemo('missing test in pubspec'));
+      blkLogger.printSkipped(blkLogger.useMemo('missing test in pubspec'));
       return true;
     }
 
-    bool result = _runTests(useCoverage, dirPath, ind + inRs + ' ');
-    if (result) result = _formatLcov(useCoverage, baseName, ind, dirPath);
-    if (result) result = _formatHtml(useCoverage, baseName, ind, dirPath);
+    bool result = _runTests(blkLogger, useCoverage, dirPath, ind + ind);
+    if (result) {
+      result = _formatLcov(
+        blkLogger,
+        useCoverage,
+        baseName,
+        ind + ind,
+        dirPath,
+      );
+    }
+    if (result) {
+      result = _formatHtml(
+        blkLogger,
+        useCoverage,
+        baseName,
+        ind + ind,
+        dirPath,
+      );
+    }
 
-    return result;
+    return blkLogger.close(result);
   }
 }
