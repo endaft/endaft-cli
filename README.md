@@ -1,8 +1,8 @@
-[![build](https://github.com/endaft/endaft-cli/actions/workflows/workflow_build.yml/badge.svg)](https://github.com/endaft/endaft-cli/actions/workflows/workflow_build.yml) [![deploy](https://github.com/endaft/endaft-cli/actions/workflows/workflow_deploy.yml/badge.svg)](https://github.com/endaft/endaft-cli/actions/workflows/workflow_deploy.yml)
+[![build](https://github.com/endaft/endaft-cli/actions/workflows/workflow_build.yml/badge.svg)](https://github.com/endaft/endaft-cli/actions/workflows/workflow_build.yml)
 
 # EnDaft
 
-Operations and utilities for the EnDaft (Dart, Flutter, AWS, Terraform) solution templates.
+Operations and utilities for the EnDaft solution templates.
 
 ## Installation
 
@@ -31,7 +31,7 @@ Below is an example of `endaft` output on an initial build when it has to create
 🤖 Processing Checks
    👀 Looking for dart..............................✅
    👀 Looking for git...............................✅
-   📂 Checking for Dockerfile.endaft.al2..............✅
+   📂 Checking for Dockerfile.al2...................✅
    📂 Checking for run.sh...........................✅
 🏁 Finished Checks
 
