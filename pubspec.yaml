@@ -1,6 +1,6 @@
 name: endaft
 description: Operations and utilities for the enDaft (Dart, AWS, Flutter, Terraform) solution templates.
-version: 1.0.8
+version: 0.0.3
 homepage: https://endaft.dev/
 repository: https://github.com/endaft/endaft-cli
 issue_tracker: https://github.com/endaft/endaft-cli/issues
