@@ -1,7 +1,7 @@
 const iacLambdaSchema = r"""{
   "definitions": {},
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "https://example.com/object1639752244.json",
+  "$id": "https://schemas.endaft.dev/lambda",
   "title": "Root",
   "type": "object",
   "required": ["handler", "runtime", "memory", "timeout", "routes", "description", "environment", "anonymous"],
