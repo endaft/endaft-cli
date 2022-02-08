@@ -58,8 +58,14 @@ class LambdaCommand extends EnDaftCommand {
         ind,
       );
       final outputName = Utils.getIaCValue(lambdaDir, 'handler');
-      final zipInput = path.join(lambdaDir, '.dist', outputName);
+      final zipInAssets = path.join(lambdaDir, 'assets');
+      final zipInLambda = path.join(lambdaDir, '.dist', outputName);
       final zipOutput = path.join(lambdaDir, '.dist', 'lambda_$lambdaName.zip');
+      final lambdaInputs = [zipInLambda];
+
+      if (Directory(zipInAssets).existsSync()) {
+        lambdaInputs.add(zipInAssets);
+      }
 
       final testSequence = [DartTestTask(this, blockLogger)];
       final fullSequence = [
@@ -78,11 +84,12 @@ class LambdaCommand extends EnDaftCommand {
         DartTestTask.taskName: {'target': lambdaDir, 'indent': subInd},
         DartCompileTask.taskName: {'target': lambdaDir, 'indent': subInd},
         ZipArchiveTask.taskName: {
-          'input': zipInput,
+          'input': lambdaInputs.join(','),
           'output': zipOutput,
           'indent': subInd
         },
       });
+
       result = blockLogger.close(result);
     }
 

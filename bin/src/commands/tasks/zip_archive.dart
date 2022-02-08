@@ -23,27 +23,31 @@ class ZipArchiveTask extends TaskCommand {
   @override
   Future<bool> run() async {
     bool result = true;
-    final inputPath = args['input'];
-    final outZipPath = args['output'];
-    final ind = args['indent'] ?? inRs;
+    final inputPaths = args['input'].toString().split(',');
+    final outZipPath = args['output'].toString();
+    final ind = (args['indent'] ?? inRs).toString();
     final zipName = path.basename(outZipPath);
-    final baseName = path.basename(inputPath);
-    final isDir = FileSystemEntity.isDirectorySync(inputPath);
-    final closer = logger.printFixed(
-        '📦 Packing ${baseName.green()} → ${zipName.green()}', ind);
 
     try {
       final zip = ZipFileEncoder()..create(outZipPath);
-      if (isDir) {
-        zip.addDirectory(inputPath, includeDirName: false);
-      } else {
-        zip.addFile(File(inputPath));
+      for (var inputPath in inputPaths) {
+        final baseName = path.basename(inputPath);
+        final isDir = FileSystemEntity.isDirectorySync(inputPath);
+        final closer = logger.printFixed(
+            '📦 Packing ${baseName.green()} → ${zipName.green()}', ind);
+        if (isDir) {
+          zip.addDirectory(Directory(inputPath));
+        } else {
+          zip.addFile(File(inputPath));
+        }
+        result = closer(result);
       }
       zip.close();
-    } catch (_) {
+    } catch (e) {
+      logger.useMemo(e.toString());
       result = false;
     }
 
-    return closer(result);
+    return result;
   }
 }
