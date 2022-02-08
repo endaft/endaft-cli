@@ -32,6 +32,16 @@ class AggregateCommand extends EnDaftCommand {
     );
   }
 
+  void copyIfSet<T>(
+    Map<String, dynamic> source,
+    String sourceKey,
+    Map<String, dynamic> dest,
+    String destKey,
+  ) {
+    final value = source.takeOr<T>(sourceKey);
+    if (value != null) dest[destKey] = value;
+  }
+
   Map<String, dynamic>? _getNamedProvider(
       Map<String, dynamic> config, String name) {
     final provider = config.takeOr<Map<String, dynamic>>(name);
@@ -102,8 +112,10 @@ class AggregateCommand extends EnDaftCommand {
     sharedIaC.remove(r"$schema");
     final cognito = sharedIaC.takeOr<Map<String, dynamic>>('cognito');
     if (cognito != null && cognito.takeOr<bool>('enabled', fallback: false)!) {
-      sharedIaC["cognito_css_path"] = cognito.takeOr<String>('css_path');
-      sharedIaC["cognito_logo_path"] = cognito.takeOr<String>('logo_path');
+      copyIfSet(cognito, "css_path", sharedIaC, "cognito_css_path");
+      copyIfSet(cognito, "logo_path", sharedIaC, "cognito_logo_path");
+      copyIfSet(cognito, "token_validity", sharedIaC, "token_validity");
+      copyIfSet(cognito, "password_rules", sharedIaC, "password_rules");
       final idPs = cognito.takeOr<Map<String, dynamic>>('identity_providers');
       if (idPs != null) {
         for (var name in namedProviders) {
