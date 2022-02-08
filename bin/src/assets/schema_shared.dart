@@ -4,15 +4,7 @@ const iacSharedSchema = r"""{
   "$id": "https://schemas.endaft.dev/shared",
   "title": "Root",
   "type": "object",
-  "required": [
-    "app_name",
-    "app_domain",
-    "local_dev_endpoint",
-    "log_retention_days",
-    "token_validity",
-    "password_rules",
-    "request_params"
-  ],
+  "required": ["app_name", "app_domain", "local_dev_endpoint", "log_retention_days", "cognito", "request_params"],
   "properties": {
     "app_name": {
       "$id": "#root/app_name",
@@ -57,6 +49,7 @@ const iacSharedSchema = r"""{
         }
       },
       "then": {
+        "required": ["enabled", "token_validity", "password_rules"],
         "properties": {
           "logo_path": {
             "$id": "#root/cognito/logo_path",
@@ -868,6 +861,7 @@ const iacSharedSchema = r"""{
         }
       },
       "else": {
+        "required": ["enabled"],
         "properties": {
           "enabled": {
             "type": "boolean"
