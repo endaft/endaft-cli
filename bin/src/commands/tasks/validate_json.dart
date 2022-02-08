@@ -22,6 +22,7 @@ class ValidateJsonTask extends TaskCommand {
 
   final inBl = '   ';
 
+  // ignore: unused_element
   Future<bool> _validateSharedIaC() async {
     final closer = logger.printFixed("🧐 ${'shared'.green()} schema", inBl);
     final schemaPath = '.endaft/schemas/iac.shared.schema.json';
@@ -50,6 +51,7 @@ class ValidateJsonTask extends TaskCommand {
     return result;
   }
 
+  // ignore: unused_element
   Future<bool> _validateLambdaIaC() async {
     final schemaPath = '.endaft/schemas/iac.lambda.schema.json';
     final lambdaSchema = Utils.readSchemaFile(schemaPath);
