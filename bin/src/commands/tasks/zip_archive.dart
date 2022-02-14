@@ -18,23 +18,23 @@ class ZipArchiveTask extends TaskCommand {
   String get description =>
       'Compresses file system entities into a zip archive.';
 
-  final inRs = '   ';
+  List<String> get inputPaths => argResults!['input'].toString().split(',');
+
+  String get outZipPath => argResults!['output'].toString();
+
+  String get zipName => path.basename(outZipPath);
 
   @override
   Future<bool> run() async {
-    bool result = true;
-    final inputPaths = args['input'].toString().split(',');
-    final outZipPath = args['output'].toString();
-    final ind = (args['indent'] ?? inRs).toString();
-    final zipName = path.basename(outZipPath);
-
+    var result = true;
     try {
       final zip = ZipFileEncoder()..create(outZipPath);
-      for (var inputPath in inputPaths) {
+      for (final inputPath in inputPaths) {
         final baseName = path.basename(inputPath);
         final isDir = FileSystemEntity.isDirectorySync(inputPath);
-        final closer = logger.printFixed(
-            '📦 Packing ${baseName.green()} → ${zipName.green()}', ind);
+        final closer = logger.fixed(
+          '📦 Packing ${baseName.green()} → ${zipName.green()}',
+        );
         if (isDir) {
           zip.addDirectory(Directory(inputPath));
         } else {
@@ -44,10 +44,10 @@ class ZipArchiveTask extends TaskCommand {
       }
       zip.close();
     } catch (e) {
-      logger.useMemo(e.toString());
+      logger.error(e.toString());
       result = false;
     }
 
-    return result;
+    return logger.close(result)!;
   }
 }

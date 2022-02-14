@@ -35,64 +35,61 @@ class LambdaCommand extends EnDaftCommand {
         ZipArchiveTask(this, logger)
       ];
 
+  Future<bool> handleLambda(String lambdaDir, Logger levelLogger) async {
+    final lambdaName = path.basename(lambdaDir);
+    final closure = levelLogger.fixed("ƛ  Handling ${lambdaName.green()}");
+    final outputName = Utils.getIaCValue(lambdaDir, 'handler');
+    final zipInAssets = path.join(lambdaDir, 'assets');
+    final zipInLambda = path.join(lambdaDir, '.dist', outputName);
+    final zipOutput = path.join(lambdaDir, '.dist', 'lambda_$lambdaName.zip');
+    final lambdaInputs = [zipInLambda];
+
+    if (Directory(zipInAssets).existsSync()) {
+      lambdaInputs.add(zipInAssets);
+    }
+
+    final testSequence = [DartTestTask(this, childLogger(levelLogger))];
+    final fullSequence = [
+      CleanDirTask(this, childLogger(levelLogger)),
+      PubGetTask(this, childLogger(levelLogger)),
+      ...testSequence,
+      DartCompileTask(this, childLogger(levelLogger)),
+      ZipArchiveTask(this, childLogger(levelLogger))
+    ];
+
+    useSequence(testOnly ? testSequence : fullSequence);
+
+    final result = await runSequence({
+      CleanDirTask.taskName: {'target': lambdaDir},
+      PubGetTask.taskName: {'target': lambdaDir},
+      DartTestTask.taskName: {'target': lambdaDir},
+      DartCompileTask.taskName: {'target': lambdaDir},
+      ZipArchiveTask.taskName: {
+        'input': lambdaInputs.join(','),
+        'output': zipOutput
+      },
+    });
+
+    return closure(result);
+  }
+
   @override
   Future<bool> run() async {
-    bool result = true;
-    final closer = logger.header("Lambdas");
+    final closure = logger.fixed("Lambdas");
+    final levelLogger = childLogger();
 
-    logger.printFixed('   🔎 Finding lambdas');
-    final String lambdasPath = path.join(rootDir, 'lambdas');
+    final findClosure = levelLogger.fixed('🔎 Finding lambdas');
+    final lambdasPath = path.join(rootDir, 'lambdas');
     final lambdaRoots = Directory(lambdasPath)
         .listSync(recursive: false, followLinks: false)
         .whereType<Directory>()
         .map((e) => e.path)
         .toList(growable: false);
-    logger.printDone('found ${lambdaRoots.length}');
+    findClosure(true, 'found ${lambdaRoots.length}');
 
-    final ind = '   ';
-    final subInd = ind + ind;
-    for (var lambdaDir in lambdaRoots) {
-      var lambdaName = path.basename(lambdaDir);
-      final blockLogger = logger.collapsibleBlock(
-        "ƛ  Handling ${lambdaName.green()}",
-        ind,
-      );
-      final outputName = Utils.getIaCValue(lambdaDir, 'handler');
-      final zipInAssets = path.join(lambdaDir, 'assets');
-      final zipInLambda = path.join(lambdaDir, '.dist', outputName);
-      final zipOutput = path.join(lambdaDir, '.dist', 'lambda_$lambdaName.zip');
-      final lambdaInputs = [zipInLambda];
-
-      if (Directory(zipInAssets).existsSync()) {
-        lambdaInputs.add(zipInAssets);
-      }
-
-      final testSequence = [DartTestTask(this, blockLogger)];
-      final fullSequence = [
-        CleanDirTask(this, blockLogger),
-        PubGetTask(this, blockLogger),
-        ...testSequence,
-        DartCompileTask(this, blockLogger),
-        ZipArchiveTask(this, blockLogger)
-      ];
-
-      useSequence(testOnly ? testSequence : fullSequence);
-
-      result = await runSequence({
-        CleanDirTask.taskName: {'target': lambdaDir, 'indent': subInd},
-        PubGetTask.taskName: {'target': lambdaDir, 'indent': subInd},
-        DartTestTask.taskName: {'target': lambdaDir, 'indent': subInd},
-        DartCompileTask.taskName: {'target': lambdaDir, 'indent': subInd},
-        ZipArchiveTask.taskName: {
-          'input': lambdaInputs.join(','),
-          'output': zipOutput,
-          'indent': subInd
-        },
-      });
-
-      result = blockLogger.close(result);
-    }
-
-    return closer(result);
+    final lambdas = lambdaRoots.map((dir) => handleLambda(dir, levelLogger));
+    final results = await Future.wait(lambdas);
+    final result = results.any((r) => !r);
+    return logger.close(closure(result))!;
   }
 }

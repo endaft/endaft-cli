@@ -23,29 +23,30 @@ class UpdateSchemasTask extends TaskCommand {
   @override
   Future<bool> run() async {
     final List<String> errors = [];
-    final closer = logger.printFixed('📝 Writing schema references', inRs);
+    final closer = logger.fixed('📝 Writing schema references');
     final schemasDir = Utils.pathFromRoot(KnownPaths.schemas, rootDir);
 
     await Utils.findFiles(matcher: RegExps.fileIaCJson).listen((file) {
       try {
-        var schemaName = file.path.contains('/lambdas/')
+        final schemaName = file.path.contains('/lambdas/')
             ? 'iac.lambda.schema.json'
             : 'iac.shared.schema.json';
-        var relSchemaPath = path.relative(schemasDir, from: file.parent.path);
-        var iacJson = jsonDecode(file.readAsStringSync());
+        final relSchemaPath = path.relative(schemasDir, from: file.parent.path);
+        final iacJson = jsonDecode(file.readAsStringSync());
         iacJson[r'$schema'] = path.join(relSchemaPath, schemaName);
         file.writeAsStringSync(JsonEncoder.withIndent('  ').convert(iacJson));
       } on FileSystemException catch (e) {
         errors.add(
-            "${e.message} → ${path.relative(e.path ?? file.path, from: rootDir)}");
+          "${e.message} → ${path.relative(e.path ?? file.path, from: rootDir)}",
+        );
       }
     }).asFuture();
 
     final result = closer(errors.isEmpty);
     for (var error in errors) {
-      logger.printFailed(error, inRs + inRs);
+      logger.error(error);
     }
 
-    return result;
+    return logger.close(result)!;
   }
 }

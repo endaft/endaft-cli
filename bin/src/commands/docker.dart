@@ -69,6 +69,6 @@ class DockerCommand extends EnDaftCommand {
       DockerBuildTask.taskName: {'name': imageName},
     });
 
-    return result;
+    return logger.close(result)!;
   }
 }

@@ -17,14 +17,11 @@ class BuildRunnerBuildTask extends TaskCommand {
   String get description =>
       'Runs `dart run build_runner build` in the specified `target` folder';
 
-  final inRs = '   ';
-
   @override
   Future<bool> run() async {
     final dirPath = targetDir;
     final baseName = path.basename(dirPath);
-    logger.printFixed('🏃 Runner build ${baseName.green()}', inRs);
-
+    final closure = logger.memo('🏃 Runner build ${baseName.green()}');
     final dartArgs = [
       'run',
       'build_runner',
@@ -33,6 +30,6 @@ class BuildRunnerBuildTask extends TaskCommand {
     ];
     final result = Process.runSync('dart', dartArgs, workingDirectory: dirPath);
 
-    return Utils.handleProcessResult(result, logger, inRs + inRs);
+    return logger.close(Utils.handleProcessResult(result, closure))!;
   }
 }

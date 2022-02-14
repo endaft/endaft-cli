@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'tasks/all.dart';
 
 class SharedCommand extends EnDaftCommand {
@@ -15,16 +13,25 @@ class SharedCommand extends EnDaftCommand {
   final String pti = '        - ';
 
   SharedCommand(Logger logger) : super(logger: logger, tools: ['dart']) {
-    argParser.addFlag(
-      'test',
-      abbr: 't',
-      negatable: false,
-      defaultsTo: false,
-      help: "Just run the tests in shared",
-    );
+    argParser
+      ..addFlag(
+        'test',
+        abbr: 't',
+        negatable: false,
+        defaultsTo: false,
+        help: "Just run the tests in shared",
+      )
+      ..addFlag(
+        'no-cache',
+        negatable: false,
+        defaultsTo: false,
+        help: "Clear the dart cache",
+      );
   }
 
   bool get testOnly => argResults!['test'];
+
+  bool get noCache => argResults!['no-cache'];
 
   @override
   List<TaskCommand> revealTasks() => [
@@ -37,20 +44,18 @@ class SharedCommand extends EnDaftCommand {
 
   @override
   Future<bool> run() async {
-    final blockLogger = logger.headerBlock("Shared");
-
+    final closure = logger.fixed("Shared");
     final sharedDir = Utils.pathFromRoot(KnownPaths.shared, rootDir);
-    final isNoCacheSet = Platform.environment.containsKey('NO_CACHE');
-    final testSequence = [DartTestTask(this, blockLogger)];
+    final testSequence = [DartTestTask(this, childLogger())];
     final fullSequence = [
-      CleanDirTask(this, blockLogger),
-      PubGetTask(this, blockLogger),
-      ...(isNoCacheSet
+      CleanDirTask(this, childLogger()),
+      PubGetTask(this, childLogger()),
+      ...(noCache
           ? [
-              BuildRunnerCleanTask(this, blockLogger),
-              BuildRunnerBuildTask(this, blockLogger)
+              BuildRunnerCleanTask(this, childLogger()),
             ]
-          : [BuildRunnerBuildTask(this, blockLogger)]),
+          : <TaskCommand>[]),
+      BuildRunnerBuildTask(this, childLogger()),
       ...testSequence
     ];
 
@@ -64,6 +69,6 @@ class SharedCommand extends EnDaftCommand {
       BuildRunnerBuildTask.taskName: {'target': sharedDir},
     });
 
-    return blockLogger.close(result);
+    return logger.close(closure(result))!;
   }
 }

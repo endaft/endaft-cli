@@ -27,16 +27,9 @@ class DartTestTask extends TaskCommand {
   @override
   String get description => 'Uses `dart run` to run tests.';
 
-  final inRs = '   ';
-
-  bool _runTests(
-    BlockLogger logger,
-    bool useCoverage,
-    String dirPath,
-    String ind,
-  ) {
+  Future<bool> _runTests(bool useCoverage, String dirPath) async {
     final usesCover = useCoverage && Utils.isCommand('collect_coverage');
-    logger.printFixed('🏃 Running tests', ind);
+    final closure = logger.memo('🏃 Running tests');
 
     final List<String> dartArgs = [
       'run',
@@ -44,24 +37,33 @@ class DartTestTask extends TaskCommand {
       '--chain-stack-traces',
       ...(usesCover ? ['--coverage=coverage'] : []),
     ];
-    final tRes = Process.runSync('dart', dartArgs, workingDirectory: dirPath);
 
-    return Utils.handleProcessResult(tRes, logger, ind);
+    final childLogger = logger.slice();
+    final result = await Process.start(
+      'dart',
+      dartArgs,
+      workingDirectory: dirPath,
+    ).then((p) {
+      p.stdout.pipe(childLogger.pipeOut());
+      p.stderr.pipe(childLogger.pipeErr());
+      return p;
+    });
+    final exitCode = await result.exitCode;
+
+    return closure(exitCode == 0);
   }
 
-  bool _formatLcov(
-    BlockLogger logger,
+  Future<bool> _formatLcov(
     bool useCoverage,
     String baseName,
-    String ind,
     String dirPath,
-  ) {
+  ) async {
     final usesCover = useCoverage && Utils.isCommand('format_coverage');
 
     // Early bail-out if there's nothing we can do here
     if (!usesCover) return true;
 
-    logger.printFixed('🦾 Formatting coverage', ind);
+    final closure = logger.memo('🦾 Formatting coverage');
     final List<String> formatArgs = [
       '--packages=.packages',
       '--base-directory=${path.normalize(dirPath)}',
@@ -72,46 +74,50 @@ class DartTestTask extends TaskCommand {
       '-i',
       'coverage',
     ];
-    final fRes = Process.runSync(
+
+    final childLogger = logger.slice();
+    final result = await Process.start(
       'format_coverage',
       formatArgs,
       workingDirectory: dirPath,
-    );
-    return Utils.handleProcessResult(
-      fRes,
-      logger,
-      inRs + inRs,
-    );
+    ).then((p) {
+      p.stdout.pipe(childLogger.pipeOut());
+      p.stderr.pipe(childLogger.pipeErr());
+      return p;
+    });
+    final exitCode = await result.exitCode;
+
+    return closure(exitCode == 0);
   }
 
-  bool _formatHtml(
-    BlockLogger logger,
+  Future<bool> _formatHtml(
     bool useCoverage,
     String baseName,
-    String ind,
     String dirPath,
-  ) {
+  ) async {
     // Early bail-out if there's nothing we can do here
     final hasGenHtml = Utils.isCommand('genhtml');
     if (hasGenHtml) {
-      logger.printFixed('📝 Marking up coverage', ind);
+      final closure = logger.memo('📝 Marking up coverage');
       final List<String> markupArgs = [
         '-o',
         './coverage/report',
         './coverage/lcov.info',
       ];
-      final gRes =
-          Process.runSync('genhtml', markupArgs, workingDirectory: dirPath);
-      return Utils.handleProcessResult(
-        gRes,
-        logger,
-        inRs + inRs,
-        (code) {
-          logger.useMemo("${_makeBadge(dirPath).trim()} → "
-              "./$baseName/coverage/report/index.html");
-        },
-        './$baseName/coverage/report/index.html',
-      );
+
+      final childLogger = logger.slice();
+      final result = await Process.start(
+        'genhtml',
+        markupArgs,
+        workingDirectory: dirPath,
+      ).then((p) {
+        p.stdout.pipe(childLogger.pipeOut());
+        p.stderr.pipe(childLogger.pipeErr());
+        return p;
+      });
+      final exitCode = await result.exitCode;
+
+      return closure(exitCode == 0);
     }
     return true;
   }
@@ -131,19 +137,24 @@ class DartTestTask extends TaskCommand {
     return bRes.stdout;
   }
 
+  bool get useCoverage => args['coverage'] ?? true;
+
   @override
   Future<bool> run() async {
     final dirPath = targetDir;
-    final ind = args['indent'] ?? inRs;
     final baseName = path.basename(dirPath);
-    final useCoverage = args['coverage'] ?? true;
-    final blkLogger =
-        logger.collapsibleBlock('🧪 Testing ${baseName.green()}', ind);
+    final closure = logger.memo(
+      '🧪 Testing ${baseName.green()}',
+      collapse: false,
+    );
 
     final hasTestDir = Directory(path.join(targetDir, 'test')).existsSync();
     if (!hasTestDir) {
-      blkLogger.printSkipped(blkLogger.useMemo('missing test directory'));
-      return true;
+      return closure(
+        true,
+        icon: LogIcon.skipped,
+        reason: 'missing test directory',
+      );
     }
 
     final usesTests =
@@ -151,30 +162,21 @@ class DartTestTask extends TaskCommand {
                 Utils.getPubSpecValue(targetDir, 'dependencies.test')) !=
             null;
     if (!usesTests) {
-      blkLogger.printSkipped(blkLogger.useMemo('missing test in pubspec'));
-      return true;
-    }
-
-    bool result = _runTests(blkLogger, useCoverage, dirPath, ind + ind);
-    if (result) {
-      result = _formatLcov(
-        blkLogger,
-        useCoverage,
-        baseName,
-        ind + ind,
-        dirPath,
-      );
-    }
-    if (result) {
-      result = _formatHtml(
-        blkLogger,
-        useCoverage,
-        baseName,
-        ind + ind,
-        dirPath,
+      return closure(
+        true,
+        icon: LogIcon.skipped,
+        reason: 'missing "test: n.n.n" in pubspec',
       );
     }
 
-    return blkLogger.close(result);
+    bool result = await _runTests(useCoverage, dirPath);
+    if (result) result = await _formatLcov(useCoverage, baseName, dirPath);
+    if (result) result = await _formatHtml(useCoverage, baseName, dirPath);
+
+    return logger.close(closure(
+      result,
+      reason: '${_makeBadge(dirPath).trim()} → '
+          './$baseName/coverage/report/index.html',
+    ))!;
   }
 }

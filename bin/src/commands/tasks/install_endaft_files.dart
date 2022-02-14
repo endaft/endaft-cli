@@ -15,12 +15,10 @@ class InstallEnDaftFilesTask extends TaskCommand {
   String get description =>
       'Installs folders and files required by other EnDaft commands.';
 
-  final inRs = '   ';
-
   bool writeSchemaFiles(String rootDir) {
     String? reason;
-    bool result = true;
-    final closer = logger.printFixed('📝 Writing schema files', inRs);
+    var result = true;
+    final closer = logger.fixed('📝 Writing schema files');
 
     try {
       Assets.schemaLambda.writeTo();
@@ -35,8 +33,8 @@ class InstallEnDaftFilesTask extends TaskCommand {
 
   bool writeDockerFiles(String rootDir) {
     String? reason;
-    bool result = true;
-    final closer = logger.printFixed('📝 Writing docker files', inRs);
+    var result = true;
+    final closer = logger.fixed('📝 Writing docker files');
 
     try {
       Assets.dockerAmznL2.writeTo(noClobber: true);
@@ -53,6 +51,6 @@ class InstallEnDaftFilesTask extends TaskCommand {
   Future<bool> run() async {
     List<bool> results = [writeDockerFiles(rootDir), writeSchemaFiles(rootDir)];
     final result = results.every((r) => r);
-    return result;
+    return logger.close(result)!;
   }
 }

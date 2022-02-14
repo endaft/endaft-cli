@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:path/path.dart' as path;
 import 'package:collection/collection.dart';
 
-import '../extensions.dart';
 import 'tasks/all.dart';
+import '../extensions.dart';
 
 class AggregateCommand extends EnDaftCommand {
   @override
@@ -31,6 +31,8 @@ class AggregateCommand extends EnDaftCommand {
       help: "The output path for distribution aggregation.",
     );
   }
+
+  String get distDir => argResults!['dist'];
 
   void copyIfSet<T>(
     Map<String, dynamic> source,
@@ -136,10 +138,7 @@ class AggregateCommand extends EnDaftCommand {
 
   @override
   Future<bool> run() async {
-    final blockLogger = logger.headerBlock("Aggregate");
-
-    final args = argResults!;
-    final String distDir = Utils.getFinalDir(args['dist']);
+    final closure = logger.memo("Aggregate");
     final String iacDir = Utils.pathFromRoot(KnownPaths.iac, rootDir);
 
     if (!Directory(rootDir).existsSync()) throw ArgumentError.notNull('input');
@@ -148,23 +147,29 @@ class AggregateCommand extends EnDaftCommand {
     }
     Directory(distDir).createSync(recursive: true);
 
-    final zips =
-        await Utils.findFiles(subPath: 'lambdas', matcher: RegExps.lambdaZips)
-            .toList();
-    blockLogger.printLine(
-        "   📥 Received ${zips.map((e) => path.basename(e.path).green()).join(', ')}");
+    final levelLogger = childLogger();
+    final zips = await Utils.findFiles(
+      subPath: 'lambdas',
+      matcher: RegExps.lambdaZips,
+    ).toList();
 
+    levelLogger.printLine(
+      "📥 Received ${zips.map((e) => path.basename(e.path).green()).join(', ')}",
+    );
     for (var zipFile in zips) {
-      blockLogger
-          .printFixed("   🚀 Copying ${path.basename(zipFile.path).green()}");
+      final levelClosure = levelLogger.fixed(
+        "🚀 Copying ${path.basename(zipFile.path).green()}",
+      );
       zipFile.copySync(path.join(distDir, path.basename(zipFile.path)));
-      blockLogger.printDone();
+      levelClosure(true);
     }
 
-    final iacFiles =
-        await Utils.findFiles(matcher: RegExps.fileIaCJson).toList();
-    final sharedIacFile =
-        iacFiles.firstWhereOrNull((f) => f.path.contains('/shared/'));
+    final iacFiles = await Utils.findFiles(
+      matcher: RegExps.fileIaCJson,
+    ).toList();
+    final sharedIacFile = iacFiles.firstWhereOrNull(
+      (f) => f.path.contains('/shared/'),
+    );
     Map<String, dynamic> sharedIaC = sharedIacFile != null
         ? jsonDecode(sharedIacFile.readAsStringSync())
         : <String, dynamic>{};
@@ -177,7 +182,7 @@ class AggregateCommand extends EnDaftCommand {
       ...sharedIaC,
       "lambda_configs": <String, dynamic>{},
     };
-    blockLogger.printFixed("   🔩 Merging IaC definitions");
+    final levelClosure = levelLogger.fixed("🔩 Merging IaC definitions");
     for (var jsonFile in iacFiles) {
       final isLambda = jsonFile.path.contains('/lambdas/');
       if (!isLambda) continue; // We're only here for lambda configs
@@ -195,17 +200,16 @@ class AggregateCommand extends EnDaftCommand {
       File(path.join(iacDir, 'iac.auto.tfvars.json'))
           .writeAsStringSync(jsonEncode(tfVarsMap));
     }
+    levelClosure(true);
 
-    blockLogger.printDone();
-
-    final gitCloser = blockLogger.printFixed("   📝 Noting IaC Hash");
+    final gitClosure = levelLogger.fixed("📝 Noting IaC Hash");
     final gitHash = Utils.getGitHash(rootDir);
     final gitResult = gitHash != null;
     if (gitResult) {
       File(path.join(distDir, 'iac.hash')).writeAsStringSync(gitHash);
     }
-    gitCloser(gitResult);
+    gitClosure(gitResult);
 
-    return blockLogger.close(true);
+    return logger.close(closure(true))!;
   }
 }

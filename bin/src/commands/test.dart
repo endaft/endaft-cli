@@ -37,7 +37,7 @@ class TestCommand extends EnDaftCommand {
 
   @override
   Future<bool> run() async {
-    final bLogger = logger.collapsibleBlock("🤖 Processing ${'Test'.green()}");
+    final closure = logger.memo("🤖 Processing ${'Test'.green()}");
     final targets = Queue<String>.from(
         await Utils.findFiles(matcher: RegExps.filePubSpecYaml).toList().then(
             (files) => files
@@ -46,17 +46,15 @@ class TestCommand extends EnDaftCommand {
                     e.parent.parent.path.endsWith('lambdas'))
                 .map((e) => e.parent.path)
                 .toList()));
-    useSequence(targets.map((e) => DartTestTask(this, bLogger)).toList());
+    useSequence(targets.map((e) => DartTestTask(this, childLogger())).toList());
     final result = await runSequenceSame((taskName) {
       return {
         'style': style,
         'target': targets.removeLast(),
         'coverage': coverage,
-        'indent': '   '
       };
     });
 
-    bLogger.footer('Test');
-    return result;
+    return logger.close(closure(result))!;
   }
 }

@@ -17,17 +17,14 @@ class BuildRunnerCleanTask extends TaskCommand {
   String get description =>
       'Runs `dart run build_runner clean` in the specified `target` folder';
 
-  final inRs = '   ';
-
   @override
   Future<bool> run() async {
     final dirPath = targetDir;
     final baseName = path.basename(dirPath);
-    logger.printFixed('🏃 Runner clean ${baseName.green()}', inRs);
-
+    final closure = logger.memo('🏃 Runner clean ${baseName.green()}');
     final dartArgs = ['run', 'build_runner', 'clean'];
     final result = Process.runSync('dart', dartArgs, workingDirectory: rootDir);
 
-    return Utils.handleProcessResult(result, logger, inRs + inRs);
+    return logger.close(Utils.handleProcessResult(result, closure))!;
   }
 }

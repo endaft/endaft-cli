@@ -19,7 +19,7 @@ class CheckCommand extends EnDaftCommand {
     );
   }
 
-  final String inBl = '   ';
+  bool get useFix => argResults!['fix'];
 
   @override
   List<TaskCommand> revealTasks() => [
@@ -29,26 +29,23 @@ class CheckCommand extends EnDaftCommand {
 
   @override
   Future<bool> run() async {
-    final blockLogger = logger.headerBlock('Checks');
+    final closure = logger.fixed('Checks');
     useSequence([
-      CheckToolsTask(this, blockLogger),
-      CheckFSTask(this, blockLogger),
+      CheckToolsTask(this, childLogger()),
+      CheckFSTask(this, childLogger()),
     ]);
-
-    final args = argResults!;
-    final bool useFix = args['fix'];
 
     bool result = await runSequence({
       CheckFSTask.taskName: {'fix': useFix}
     });
 
     if (!result) {
-      logger.printWarn(
-          'Some errors can be fixed automatically using the '
-          '${'endaft check --fix'.bold()}.',
-          inBl);
+      logger.warn(
+        'Some errors can be fixed automatically using the '
+        '${'endaft check --fix'.bold()}.',
+      );
     }
 
-    return blockLogger.close(result);
+    return logger.close(closure(result))!;
   }
 }

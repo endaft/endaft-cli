@@ -22,15 +22,13 @@ class DockerRunTask extends TaskCommand {
   @override
   String get description => 'Runs a build inside a docker container.';
 
-  final inRs = '   ';
-
   @override
   Future<bool> run() async {
     final rootDir = Directory.current.path;
     final imageName = "${path.basename(rootDir)}-builder";
 
     bool hasImage = Utils.dockerImageExists(imageName);
-    logger.printFixed("🐳 Running in ${imageName.green()}")(hasImage);
+    logger.fixed("🐳 Running in ${imageName.green()}")(hasImage);
 
     final args = [
       'run',
@@ -46,10 +44,14 @@ class DockerRunTask extends TaskCommand {
       '-it',
       imageName
     ];
-    final process = await Process.start('docker', args,
-        workingDirectory: rootDir, mode: ProcessStartMode.inheritStdio);
+    final process = await Process.start(
+      'docker',
+      args,
+      workingDirectory: rootDir,
+      mode: ProcessStartMode.inheritStdio,
+    );
     final result = await process.exitCode == 0;
 
-    return result;
+    return logger.close(result)!;
   }
 }
