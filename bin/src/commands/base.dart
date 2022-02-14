@@ -36,11 +36,6 @@ abstract class EnDaftCommand extends Command<bool> {
   /// Reveals all tasks potentially used by the command.
   List<TaskCommand> revealTasks();
 
-  /// Gets a [Logger] by slicing [logger] or [from].
-  Logger childLogger([Logger? from]) {
-    return (from ?? logger).slice();
-  }
-
   /// Sets the sequence of tasks run by this command
   void useSequence(List<TaskCommand> sequence) {
     _sequence = sequence;

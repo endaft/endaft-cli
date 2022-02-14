@@ -39,6 +39,6 @@ class BuildCommand extends EnDaftCommand {
       if (!result) throw Exception('Step Failed: $step 😢');
     }
 
-    return logger.close(true)!;
+    return true;
   }
 }

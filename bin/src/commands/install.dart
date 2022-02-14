@@ -21,13 +21,13 @@ class InstallCommand extends EnDaftCommand {
 
   @override
   Future<bool> run() async {
-    final closure = logger.memo("Install");
+    final blockLogger = logger.headerBlock("Install");
     useSequence([
-      InstallEnDaftFilesTask(this, childLogger()),
-      UpdateSchemasTask(this, childLogger()),
+      InstallEnDaftFilesTask(this, blockLogger),
+      UpdateSchemasTask(this, blockLogger),
     ]);
     final result = await runSequence();
 
-    return logger.close(closure(result))!;
+    return blockLogger.close(result);
   }
 }

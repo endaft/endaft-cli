@@ -22,15 +22,18 @@ class DockerBuildTask extends TaskCommand {
   @override
   String get description => 'Builds the required docker image.';
 
-  String get imageName => args['name'];
+  final inRs = '   ';
 
   @override
   Future<bool> run() async {
+    final blockLogger = logger.headerBlock('Docker Build');
+
+    final String imageName = args['name'];
     final rootDir = Directory.current.path;
     final endaftDir = Utils.pathFromRoot(KnownPaths.endaft);
     final dockerDir = path.relative(endaftDir);
 
-    final closure = logger.memo("🧱 Building ${imageName.green()} image");
+    blockLogger.printBlock("🧱 Building ${imageName.green()} image", inRs);
     final dockerArgs = [
       'build',
       '-q',
@@ -46,17 +49,16 @@ class DockerBuildTask extends TaskCommand {
       '.'
     ];
 
-    final result = await Process.start(
-      'docker',
-      dockerArgs,
-      workingDirectory: dockerDir,
-    ).then((p) {
-      p.stdout.pipe(logger.pipeOut());
-      p.stderr.pipe(logger.pipeErr());
+    final String pti = '      ';
+    final result =
+        await Process.start('docker', dockerArgs, workingDirectory: dockerDir)
+            .then((p) {
+      p.stdout.pipe(blockLogger.getPipeOut(pti));
+      p.stderr.pipe(blockLogger.getPipeErr(pti));
       return p;
     });
 
     final exitCode = await result.exitCode;
-    return logger.close(closure(exitCode == 0))!;
+    return blockLogger.close(exitCode == 0);
   }
 }

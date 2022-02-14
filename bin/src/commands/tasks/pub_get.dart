@@ -22,21 +22,13 @@ class PubGetTask extends TaskCommand {
   @override
   Future<bool> run() async {
     final dirPath = targetDir;
+    final ind = args['indent'] ?? inRs;
     final baseName = path.basename(dirPath);
-    final closure = logger.memo('👇 Dependencies for ${baseName.green()}');
+    logger.printFixed('👇 Dependencies for ${baseName.green()}', ind);
 
     final dartArgs = ['pub', 'get'];
-    final result = await Process.start(
-      'dart',
-      dartArgs,
-      workingDirectory: dirPath,
-    ).then((p) {
-      p.stdout.pipe(logger.pipeOut());
-      p.stderr.pipe(logger.pipeErr());
-      return p;
-    });
-    final exitCode = await result.exitCode;
+    final result = Process.runSync('dart', dartArgs, workingDirectory: dirPath);
 
-    return logger.close(closure(exitCode == 0))!;
+    return Utils.handleProcessResult(result, logger, inRs + inRs);
   }
 }

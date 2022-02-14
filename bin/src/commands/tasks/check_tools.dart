@@ -10,18 +10,19 @@ class CheckToolsTask extends TaskCommand {
   @override
   String get description => 'Checks for each required tool.';
 
+  final inRs = '   ';
+
   @override
   Future<bool> run() async {
     final List<String> tools = parent.globalTools;
 
     List<bool> results = [];
     for (var tool in tools) {
-      final closer = logger.memo('👀 Looking for ${tool.green()}');
-      final result = Utils.isCommand(tool);
-      results.add(closer(result));
+      final closer = logger.printFixed('👀 Looking for ${tool.green()}', inRs);
+      results.add(closer(Utils.isCommand(tool)));
     }
 
     final result = results.every((r) => r);
-    return logger.close(result)!;
+    return result;
   }
 }

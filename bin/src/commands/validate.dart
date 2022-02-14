@@ -18,9 +18,9 @@ class ValidateCommand extends EnDaftCommand {
 
   @override
   Future<bool> run() async {
-    final closure = logger.memo("Validate");
-    useSequence([ValidateJsonTask(this, childLogger())]);
+    final blockLogger = logger.headerBlock("Validate");
+    useSequence([ValidateJsonTask(this, blockLogger)]);
     final result = await runSequence();
-    return logger.close(closure(result))!;
+    return blockLogger.close(result);
   }
 }

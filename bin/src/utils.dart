@@ -8,16 +8,19 @@ import 'package:path/path.dart' as path;
 import 'package:json_schema2/json_schema2.dart';
 
 import 'enums.dart';
-import 'log_controller.dart';
+import 'logger.dart';
 
 export 'enums.dart';
-export 'log_controller.dart';
+export 'logger.dart';
 
 /// A handler to convert [data] from a [File] into [T]
 typedef FileParser<T> = T Function(Uint8List data);
 
 /// A handler to create a file at [path] with content
 typedef FileCreator = bool Function({File file});
+
+/// A callback for external process finalization
+typedef ProcessFinalizer = void Function(int code);
 
 /// Common utility functions shared by all tasks and commands
 class Utils {
@@ -143,7 +146,7 @@ class Utils {
 
   /// Returns the result of [path.normalize], as an absolute path from [Directory.current].
   static String getFinalDir(String dirPath) {
-    var finalPath = path.normalize(dirPath);
+    var finalPath = dirPath;
     if (!path.isAbsolute(finalPath)) finalPath = path.absolute(finalPath);
     if (finalPath.endsWith('/.')) {
       finalPath = finalPath.substring(0, finalPath.length - 2);
@@ -154,20 +157,24 @@ class Utils {
   /// Handles the child process results and outputs
   static bool handleProcessResult(
     ProcessResult result,
-    LogEntryClosure closure, [
+    Logger logger, [
+    String indent = '',
     ProcessFinalizer? finalizer,
-    String? reasonMessage,
+    String message = '',
   ]) {
-    final success = result.exitCode == 0;
-    final reason = success ? reasonMessage : 'code ${result.exitCode}';
-    return closure(
-      success,
-      reason: reason,
-      finalizer: finalizer,
-      exitCode: result.exitCode,
-      outputs: [result.stdout.toString()],
-      errors: [result.stderr.toString()],
-    );
+    if (result.exitCode == 0) {
+      logger.printDone(message);
+    } else {
+      logger.printFailed('code ${result.exitCode}');
+
+      String logs = result.stderr.toString();
+      if (logs.isEmpty) logs = result.stdout.toString();
+      logger.printPassThru(logs, indent);
+    }
+
+    if (finalizer != null) finalizer(result.exitCode);
+
+    return result.exitCode == 0;
   }
 
   /// Deletes a [FileSystemEntity] by [entityPath], only if it exists.

@@ -11,8 +11,9 @@ import '../../utils.dart';
 import '../../assets/all.dart';
 
 export '../base.dart';
-export '../../utils.dart';
 export '../../assets/all.dart';
+export '../../utils.dart';
+export '../../logger.dart';
 export 'package:tint/tint.dart';
 
 /// A task command meant to be sequenced by other commands

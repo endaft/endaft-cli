@@ -16,28 +16,29 @@ class CheckFSTask extends TaskCommand {
   @override
   String get description => 'Checks for folders and files.';
 
-  bool get useFix => args['fix'] ?? false;
+  final inRs = '   ';
 
   @override
   Future<bool> run() async {
+    final bool fix = args['fix'];
     final List<FileRequirement> fsPaths = parent.globalFsPaths;
 
     List<bool> results = [];
     for (var fsp in fsPaths) {
       final name = path.basename(fsp.path);
-      final closure = logger.memo('📂 Checking for ${name.green()}');
+      final closer = logger.printFixed('📂 Checking for ${name.green()}', inRs);
       final file = File(fsp.path);
       bool exists = file.existsSync();
       String reason = '';
-      if (!exists && useFix && fsp.canCreate) {
+      if (!exists && fix && fsp.canCreate) {
         exists = fsp.creator!(file: file);
       } else {
         reason = 'can fix';
       }
-      results.add(closure(exists, reason: reason));
+      results.add(closer(exists, reason));
     }
 
     final result = results.every((r) => r);
-    return logger.close(result)!;
+    return result;
   }
 }

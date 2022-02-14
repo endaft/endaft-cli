@@ -17,13 +17,16 @@ class CleanDirTask extends TaskCommand {
   String get description =>
       'Cleans, or purges, known outputs in the specified `target` folder';
 
+  final inRs = '   ';
+
   @override
   Future<bool> run() async {
     String? reason;
     bool result = true;
     final dirPath = targetDir;
+    final ind = args['indent'] ?? inRs;
     final baseName = path.basename(dirPath);
-    final closer = logger.memo('🧼 Cleaning ${baseName.green()}');
+    final closer = logger.printFixed('🧼 Cleaning ${baseName.green()}', ind);
 
     try {
       final targets = [
@@ -37,6 +40,6 @@ class CleanDirTask extends TaskCommand {
       reason = e.message;
     }
 
-    return logger.close(closer(result, reason: reason))!;
+    return closer(result, reason);
   }
 }

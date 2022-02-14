@@ -17,7 +17,7 @@ dependencies:
   args: ^2.3.0
   tint: ^2.0.0
   yaml: ^3.1.0
-  archive: ^3.1.11
+  archive: ^3.1.9
   equatable: ^2.0.3
   collection: ^1.15.0
   json_schema2: ^2.0.1
