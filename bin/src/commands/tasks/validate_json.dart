@@ -93,12 +93,14 @@ class ValidateJsonTask extends TaskCommand {
         .listen((file) {
       final fileName = path.relative(file.path);
       final json = Utils.readFile(file: file, parser: FileParsers.jsonParser);
-      final routes = (json["routes"] as List<dynamic>)
-          .map((e) => Map<String, String>.from(e));
-      for (var route in routes) {
-        final key = route.values.join(' ');
-        routesMap[key] = routesMap[key] ?? List.empty(growable: true);
-        routesMap[key]!.add(fileName);
+      if (json["routes"] != null) {
+        final routes = (json["routes"] as List<dynamic>)
+            .map((e) => Map<String, String>.from(e));
+        for (var route in routes) {
+          final key = route.values.join(' ');
+          routesMap[key] = routesMap[key] ?? List.empty(growable: true);
+          routesMap[key]!.add(fileName);
+        }
       }
     }).asFuture();
 

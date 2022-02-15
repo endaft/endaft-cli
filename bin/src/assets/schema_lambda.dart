@@ -1,10 +1,19 @@
 const iacLambdaSchema = r"""{
   "definitions": {},
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$id": "https://schemas.endaft.dev/lambda",
+  "$id": "https://example.com/object1639752244.json",
   "title": "Root",
   "type": "object",
-  "required": ["handler", "runtime", "memory", "timeout", "routes", "description", "environment", "anonymous"],
+  "required": [
+    "handler",
+    "runtime",
+    "architecture",
+    "memory",
+    "timeout",
+    "description",
+    "environment",
+    "anonymous"
+  ],
   "properties": {
     "description": {
       "$id": "#root/description",
@@ -47,6 +56,15 @@ const iacLambdaSchema = r"""{
       ],
       "pattern": "^.*$"
     },
+    "architecture": {
+      "$id": "#root/architecture",
+      "description": "The architecture used for executing the function.",
+      "title": "Architecture",
+      "type": "string",
+      "enum": ["arm64", "x86_64"],
+      "default": "arm64",
+      "pattern": "^.*$"
+    },
     "memory": {
       "$id": "#root/memory",
       "description": "The amount of memory in megabytes to allocate for execution.\nRange: 128 -> 10,240",
@@ -69,6 +87,15 @@ const iacLambdaSchema = r"""{
       "title": "Anonymous",
       "type": "boolean",
       "default": false
+    },
+    "cloudfront_event": {
+      "$id": "#root/cloudfront_event",
+      "description": "The CloudFront event to which the function will be bound.",
+      "title": "CloudFront Event",
+      "type": "string",
+      "enum": ["viewer-request", "origin-request", "viewer-response", "origin-response"],
+      "default": "origin-request",
+      "pattern": "^.*$"
     },
     "routes": {
       "$id": "#root/routes",

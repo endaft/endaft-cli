@@ -185,6 +185,8 @@ class AggregateCommand extends EnDaftCommand {
       final name = path.basename(jsonFile.parent.path);
       Map<String, dynamic> iac = jsonDecode(jsonFile.readAsStringSync());
       iac.remove(r"$schema");
+      iac['routes'] = iac.takeOr('routes', fallback: []);
+      iac['cloudfront_event'] = iac.takeOr('cloudfront_event', fallback: '');
       tfVarsMap['lambda_configs'][name] = iac;
     }
     File(path.join(distDir, 'iac.auto.tfvars.json'))
