@@ -29,6 +29,19 @@ const iacSharedSchema = r"""{
       "type": "string",
       "default": "http://localhost:19006"
     },
+    "web_apps": {
+      "$id": "#root/web_apps",
+      "description": "A map of subdomains (key) to a local path (value) that will be published and served for that subdomain. The `www` entry will also be used for root domain content.",
+      "title": "Web Apps",
+      "uniqueItems": true,
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {
+        "www": "../app/build/web"
+      }
+    },
     "cognito": {
       "$id": "#root/cognito",
       "description": "The AWS Cognito settings.",
