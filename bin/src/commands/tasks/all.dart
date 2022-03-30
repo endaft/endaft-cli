@@ -8,6 +8,7 @@ export 'dart_compile.dart';
 export 'dart_test.dart';
 export 'docker_build.dart';
 export 'docker_run.dart';
+export 'git_status.dart';
 export 'install_endaft_files.dart';
 export 'pub_get.dart';
 export 'update_schemas.dart';

@@ -34,8 +34,7 @@ abstract class TaskCommand extends Command<bool> {
       Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
 
   /// Get the root directory from the `root` arg, or [Directory.current] if not present.
-  String get rootDir =>
-      args.containsKey('root') ? args['root'] : Directory.current.path;
+  String get rootDir => Utils.getFinalDir(args['root'] ?? argResults!['root']);
 
   /// Get the target directory from the `target` arg, or [rootDir] if not present.
   String get targetDir => args.containsKey('target') ? args['target'] : rootDir;

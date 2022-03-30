@@ -14,3 +14,6 @@ clean:
 
 docs:
 	dartdoc
+
+install: all
+	dart pub global activate --source path .

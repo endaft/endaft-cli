@@ -124,7 +124,19 @@ class Utils {
 
   /// Checks if [command] is executable on this system.
   static bool isCommand(String command) {
-    return Process.runSync('command', ['-v', command]).exitCode == 0;
+    final result = Process.runSync('command', ['-v', command]);
+    return result.exitCode == 0 && result.stdout.toString().trim().isNotEmpty;
+  }
+
+  /// Get the full path to [command] on this system, or null if the [command] is not available.
+  static String? toolPath(String command) {
+    final result = Process.runSync('command', ['-v', command]);
+    return result.stdout.toString().trim();
+  }
+
+  /// Creates a temporary [Directory] under the system temporary directory and returns the absolute path to it.
+  static String getTempPath([String prefix = 'endaft']) {
+    return Directory.systemTemp.createTempSync(prefix).path;
   }
 
   /// Gets the git hash from [dirPath], if it's a repo, otherwise `null`.

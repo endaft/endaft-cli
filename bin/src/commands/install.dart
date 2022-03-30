@@ -1,4 +1,5 @@
 import 'tasks/all.dart';
+import 'tasks/template.dart';
 
 class InstallCommand extends EnDaftCommand {
   @override
@@ -15,18 +16,25 @@ class InstallCommand extends EnDaftCommand {
 
   @override
   List<TaskCommand> revealTasks() => [
-        InstallEnDaftFilesTask(this, logger),
-        UpdateSchemasTask(this, logger),
+        GitStatusTask(this, logger),
+        TemplateTask(this, logger),
+        /* InstallEnDaftFilesTask(this, logger),
+        UpdateSchemasTask(this, logger), */
       ];
 
   @override
   Future<bool> run() async {
     final blockLogger = logger.headerBlock("Install");
     useSequence([
-      InstallEnDaftFilesTask(this, blockLogger),
-      UpdateSchemasTask(this, blockLogger),
+      GitStatusTask(this, blockLogger),
+      TemplateTask(this, blockLogger),
+      /* InstallEnDaftFilesTask(this, blockLogger),
+      UpdateSchemasTask(this, blockLogger), */
     ]);
-    final result = await runSequence();
+    final result = await runSequence({
+      GitStatusTask.taskName: {'root': rootDir},
+      TemplateTask.taskName: {'root': rootDir}
+    });
 
     return blockLogger.close(result);
   }
