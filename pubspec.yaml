@@ -17,6 +17,7 @@ dependencies:
   args: ^2.3.0
   tint: ^2.0.0
   yaml: ^3.1.0
+  http: ^0.13.4
   archive: ^3.3.0
   equatable: ^2.0.3
   collection: ^1.16.0
