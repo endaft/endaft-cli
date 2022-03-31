@@ -1,7 +1,7 @@
 import 'package:args/command_runner.dart';
 
-import 'src/logger.dart';
-import 'src/commands/all.dart';
+// ignore: avoid_relative_lib_imports
+import '../lib/endaft.dart';
 
 void main(List<String> args) async {
   final logger = Logger();
