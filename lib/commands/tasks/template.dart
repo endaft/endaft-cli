@@ -102,6 +102,8 @@ class TemplateTask extends TaskCommand {
 
       final destPath = path.absolute(rootDir, relPath);
       if (!File(destPath).existsSync()) {
+        final destDir = Directory(path.dirname(destPath));
+        if (!destDir.existsSync()) destDir.createSync(recursive: true);
         file.copySync(destPath);
       }
     }
