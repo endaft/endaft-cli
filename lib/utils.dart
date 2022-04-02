@@ -22,6 +22,9 @@ typedef FileCreator = bool Function({File file});
 /// A callback for external process finalization
 typedef ProcessFinalizer = void Function(int code);
 
+/// The definition of a worker function used in an automated sequence.
+typedef WorkerFunc = Future<bool> Function();
+
 /// Common utility functions shared by all tasks and commands
 class Utils {
   /// An async [Stream] of [File] instances found responsive to the [matcher]
