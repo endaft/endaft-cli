@@ -112,7 +112,7 @@ class TemplateTask extends TaskCommand {
   Future<bool> _installTemplate() async {
     final installScriptPath = path.join(rootDir, 'shared/bin/install.dart');
     if (File(installScriptPath).existsSync()) {
-      final args = ['run', 'install'];
+      final args = ['run', ':install'];
       final installResult = Process.runSync(
         'dart',
         args,
