@@ -19,6 +19,8 @@ class CheckCommand extends EnDaftCommand {
     );
   }
 
+  bool get useFix => args['fix'];
+
   final String inBl = '   ';
 
   @override
@@ -34,9 +36,6 @@ class CheckCommand extends EnDaftCommand {
       CheckToolsTask(this, blockLogger),
       CheckFSTask(this, blockLogger),
     ]);
-
-    final args = argResults!;
-    final bool useFix = args['fix'];
 
     bool result = await runSequence({
       CheckFSTask.taskName: {'fix': useFix}
