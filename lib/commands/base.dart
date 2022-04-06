@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:args/command_runner.dart';
@@ -12,13 +13,16 @@ abstract class EnDaftCommand extends Command<bool> {
   EnDaftCommand({required this.tools, required this.logger}) {
     var workDir = Directory.current.path;
     if (!argParser.allowsAnything) {
-      argParser.addOption(
-        'root',
-        abbr: 'r',
-        defaultsTo: path.relative(workDir, from: workDir),
-        help: "The root path to process. Should be your workspace root.",
-      );
+      argParser
+        ..addOption(
+          'root',
+          abbr: 'r',
+          defaultsTo: path.relative(workDir, from: workDir),
+          help: "The root path to process. Should be your workspace root.",
+        )
+        ..addOption('packages');
     }
+    _argResults = argParser.parse(Platform.executableArguments);
   }
 
   /// Gets the normalized active root directory for the command
@@ -26,6 +30,9 @@ abstract class EnDaftCommand extends Command<bool> {
 
   /// Private storage for the sequence
   List<TaskCommand> _sequence = [];
+
+  ArgResults get args => super.argResults ?? _argResults;
+  late final ArgResults _argResults;
 
   /// A logger instance
   final Logger logger;
