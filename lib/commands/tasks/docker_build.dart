@@ -43,7 +43,7 @@ class DockerBuildTask extends TaskCommand {
       '--build-arg',
       'USER_HOME=$userDir',
       '-t',
-      imageName,
+      imageName.toLowerCase(),
       '-f',
       'Dockerfile.al2',
       '.'

@@ -36,7 +36,7 @@ class DockerRunTask extends TaskCommand {
       'run',
       '--rm',
       '--name',
-      imageName,
+      imageName.toLowerCase(),
       '-v',
       '$rootDir:/home/code',
       '-v',
@@ -44,7 +44,7 @@ class DockerRunTask extends TaskCommand {
       '-e',
       'CI=false',
       '-it',
-      imageName
+      imageName.toLowerCase()
     ];
     final process = await Process.start('docker', args,
         workingDirectory: rootDir, mode: ProcessStartMode.inheritStdio);
