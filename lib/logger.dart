@@ -38,7 +38,11 @@ class BlockLogger extends Logger {
   }
 }
 
+const String _noColorKey = 'NO_COLOR';
+
 class Logger {
+  final bool _noColor = Platform.environment.containsKey(_noColorKey);
+
   final _padding = "....................................................";
   _getPad(int length) {
     return length > _padding.length ? '' : _padding.substring(length);
@@ -112,7 +116,7 @@ class Logger {
   }
 
   void printRaw(String message) {
-    stdout.write(message);
+    stdout.write(_noColor ? message.strip() : message);
   }
 
   void printPassThru(String message, [String indent = '']) {
