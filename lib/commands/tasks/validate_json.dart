@@ -24,7 +24,7 @@ class ValidateJsonTask extends TaskCommand {
 
   // ignore: unused_element
   Future<bool> _validateSharedIaC() async {
-    final closer = logger.printFixed("🧐 ${'shared'.green()} schema", inBl);
+    final closer = logger.printFixed("🧐 shared schema", inBl);
     final schemaPath = '.endaft/schemas/iac.shared.schema.json';
     final sharedSchema = Utils.readSchemaFile(schemaPath);
     final sharedFile =
@@ -40,9 +40,9 @@ class ValidateJsonTask extends TaskCommand {
     if (!result) {
       for (var error in sharedErrors) {
         logger.printFailed(
-            '${path.relative(sharedFileName).bold()} → '
-            '${error.message.underline()} @ '
-            '${error.instancePath?.yellow()}',
+            '${path.relative(sharedFileName)} → '
+            '${error.message} @ '
+            '${error.instancePath}',
             inBl);
       }
       logger.printLine();
@@ -68,14 +68,13 @@ class ValidateJsonTask extends TaskCommand {
     final result = allErrors.entries.every((e) => e.value.isEmpty);
     for (var error in allErrors.entries) {
       final lambdaName = path.relative(error.key);
-      logger.printFixed(
-          "🧐 ${lambdaName.green()} schema", inBl)(error.value.isEmpty);
+      logger.printFixed("🧐 $lambdaName schema", inBl)(error.value.isEmpty);
       if (error.value.isNotEmpty) {
         for (var e in error.value) {
           logger.printFailed(
-              '${'$lambdaName/iac.json'.bold()} → '
-              '${e.message.underline()} @ '
-              '${e.instancePath?.yellow()}',
+              '${'$lambdaName/iac.json'} → '
+              '${e.message} @ '
+              '${e.instancePath}',
               inBl);
         }
         logger.printLine();
@@ -86,8 +85,7 @@ class ValidateJsonTask extends TaskCommand {
   }
 
   Future<bool> _validateAPIRoutes() async {
-    final closer =
-        logger.printFixed("🚏 x-check ${'api routes'.green()}", inBl);
+    final closer = logger.printFixed("🚏 x-check api routes", inBl);
     final Map<String, List<String>> routesMap = {};
     await Utils.findFiles(subPath: 'lambdas', matcher: RegExps.fileIaCJson)
         .listen((file) {
@@ -112,8 +110,8 @@ class ValidateJsonTask extends TaskCommand {
       for (var error in errorMap.entries) {
         final routeName = path.relative(error.key);
         logger.printFailed(
-            '${routeName.bold()} → '
-            '${error.value.map((e) => e.yellow()).join(' ↔ ')}',
+            '$routeName → '
+            '${error.value.join(' ↔ ')}',
             inBl + inBl);
       }
       logger.printLine();

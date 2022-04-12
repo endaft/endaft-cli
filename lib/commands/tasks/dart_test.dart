@@ -137,8 +137,7 @@ class DartTestTask extends TaskCommand {
     final ind = args['indent'] ?? inRs;
     final baseName = path.basename(dirPath);
     final useCoverage = args['coverage'] ?? true;
-    final blkLogger =
-        logger.collapsibleBlock('🧪 Testing ${baseName.green()}', ind);
+    final blkLogger = logger.collapsibleBlock('🧪 Testing $baseName', ind);
 
     final hasTestDir = Directory(path.join(targetDir, 'test')).existsSync();
     if (!hasTestDir) {

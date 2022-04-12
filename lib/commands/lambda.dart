@@ -54,7 +54,7 @@ class LambdaCommand extends EnDaftCommand {
     for (var lambdaDir in lambdaRoots) {
       var lambdaName = path.basename(lambdaDir);
       final blockLogger = logger.collapsibleBlock(
-        "ƛ  Handling ${lambdaName.green()}",
+        "ƛ  Handling $lambdaName",
         ind,
       );
       final outputName = Utils.getIaCValue(lambdaDir, 'handler');

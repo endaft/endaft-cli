@@ -14,7 +14,6 @@ export '../base.dart';
 export '../../assets/all.dart';
 export '../../utils.dart';
 export '../../logger.dart';
-export 'package:tint/tint.dart';
 
 /// A task command meant to be sequenced by other commands
 abstract class TaskCommand extends Command<bool> {

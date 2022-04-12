@@ -23,7 +23,7 @@ class BuildRunnerCleanTask extends TaskCommand {
   Future<bool> run() async {
     final dirPath = targetDir;
     final baseName = path.basename(dirPath);
-    logger.printFixed('🏃 Runner clean ${baseName.green()}', inRs);
+    logger.printFixed('🏃 Runner clean $baseName', inRs);
 
     final dartArgs = ['run', 'build_runner', 'clean'];
     final result = Process.runSync('dart', dartArgs, workingDirectory: rootDir);

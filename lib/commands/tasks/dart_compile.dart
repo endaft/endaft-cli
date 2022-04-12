@@ -26,8 +26,7 @@ class DartCompileTask extends TaskCommand {
     final distPath = path.join(dirPath, '.dist');
     final outputName = Utils.getIaCValue(dirPath, 'handler');
     final relOutPath = '.dist/$outputName';
-    logger.printFixed(
-        '💪 Compiling ${baseName.green()} → ${outputName?.green()}', ind);
+    logger.printFixed('💪 Compiling $baseName → $outputName', ind);
 
     if (!Directory(distPath).existsSync()) Directory(distPath).createSync();
     final dartArgs = ['compile', 'exe', 'lib/main.dart', '-o', relOutPath];

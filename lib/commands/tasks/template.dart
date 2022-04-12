@@ -46,10 +46,10 @@ class TemplateTask extends TaskCommand {
     int counter = 0;
     logger.printLine();
     for (var template in options) {
-      logger.printLine('      ${++counter} ▶ ${template.underline()}');
+      logger.printLine('      ${++counter} ▶ $template');
     }
     logger.printLine();
-    logger.printRaw('      Select a template: '.bold());
+    logger.printRaw('      Select a template: ');
     final answer = _getAnswerInt(0, options.length);
     final template = options[answer - 1];
     logger.useMemo(template);

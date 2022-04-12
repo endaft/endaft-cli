@@ -26,7 +26,7 @@ class CleanDirTask extends TaskCommand {
     final dirPath = targetDir;
     final ind = args['indent'] ?? inRs;
     final baseName = path.basename(dirPath);
-    final closer = logger.printFixed('🧼 Cleaning ${baseName.green()}', ind);
+    final closer = logger.printFixed('🧼 Cleaning $baseName', ind);
 
     try {
       final targets = [

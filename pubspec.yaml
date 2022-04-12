@@ -15,7 +15,6 @@ dependencies:
   meta: ^1.7.0
   path: ^1.8.1
   args: ^2.3.0
-  tint: ^2.0.0
   yaml: ^3.1.0
   http: ^0.13.4
   archive: ^3.3.0

@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:tint/tint.dart';
-
 import 'log_pipe.dart';
 
 typedef MatchedClosure = T Function<T>(T result);
@@ -38,11 +36,7 @@ class BlockLogger extends Logger {
   }
 }
 
-const String _noColorKey = 'NO_COLOR';
-
 class Logger {
-  final bool _noColor = Platform.environment.containsKey(_noColorKey);
-
   final _padding = "....................................................";
   _getPad(int length) {
     return length > _padding.length ? '' : _padding.substring(length);
@@ -81,7 +75,7 @@ class Logger {
   }
 
   MatchedClosure header([String? tag]) {
-    printRaw("🤖 Processing ${(tag ?? '').green()}\n");
+    printRaw("🤖 Processing ${(tag ?? '')}\n");
     return <T>(result) {
       footer(tag);
       return result;
@@ -89,17 +83,17 @@ class Logger {
   }
 
   BlockLogger headerBlock([String? tag]) {
-    final message = "🤖 Processing ${(tag ?? '').green()}";
+    final message = "🤖 Processing ${(tag ?? '')}";
     printRaw("$message\n");
     return BlockLogger(message);
   }
 
   void footer([String? tag]) {
-    printRaw("🏁 Finished ${(tag ?? '').green()}\n");
+    printRaw("🏁 Finished ${(tag ?? '')}\n");
   }
 
   SuccessClosure printFixed(String message, [String indent = '']) {
-    final visLen = message.strip().length;
+    final visLen = message.length;
     printRaw("$indent$message${_getPad(visLen + indent.length)}");
     return (bool success, [String? reason]) {
       if (success) {
@@ -116,7 +110,7 @@ class Logger {
   }
 
   void printRaw(String message) {
-    stdout.write(_noColor ? message.strip() : message);
+    stdout.write(message);
   }
 
   void printPassThru(String message, [String indent = '']) {

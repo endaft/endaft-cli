@@ -23,7 +23,7 @@ class BuildRunnerBuildTask extends TaskCommand {
   Future<bool> run() async {
     final dirPath = targetDir;
     final baseName = path.basename(dirPath);
-    logger.printFixed('🏃 Runner build ${baseName.green()}', inRs);
+    logger.printFixed('🏃 Runner build $baseName', inRs);
 
     final dartArgs = [
       'run',

@@ -26,7 +26,7 @@ class CheckFSTask extends TaskCommand {
     List<bool> results = [];
     for (var fsp in fsPaths) {
       final name = path.basename(fsp.path);
-      final closer = logger.printFixed('📂 Checking for ${name.green()}', inRs);
+      final closer = logger.printFixed('📂 Checking for $name', inRs);
       final file = File(fsp.path);
       bool exists = file.existsSync();
       String reason = '';

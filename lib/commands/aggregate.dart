@@ -152,11 +152,10 @@ class AggregateCommand extends EnDaftCommand {
         await Utils.findFiles(subPath: 'lambdas', matcher: RegExps.lambdaZips)
             .toList();
     blockLogger.printLine(
-        "   📥 Received ${zips.map((e) => path.basename(e.path).green()).join(', ')}");
+        "   📥 Received ${zips.map((e) => path.basename(e.path)).join(', ')}");
 
     for (var zipFile in zips) {
-      blockLogger
-          .printFixed("   🚀 Copying ${path.basename(zipFile.path).green()}");
+      blockLogger.printFixed("   🚀 Copying ${path.basename(zipFile.path)}");
       zipFile.copySync(path.join(distDir, path.basename(zipFile.path)));
       blockLogger.printDone();
     }

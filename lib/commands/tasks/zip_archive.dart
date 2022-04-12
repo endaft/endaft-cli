@@ -33,8 +33,8 @@ class ZipArchiveTask extends TaskCommand {
       for (var inputPath in inputPaths) {
         final baseName = path.basename(inputPath);
         final isDir = FileSystemEntity.isDirectorySync(inputPath);
-        final closer = logger.printFixed(
-            '📦 Packing ${baseName.green()} → ${zipName.green()}', ind);
+        final closer =
+            logger.printFixed('📦 Packing $baseName → $zipName', ind);
         if (isDir) {
           zip.addDirectory(Directory(inputPath));
         } else {

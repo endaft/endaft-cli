@@ -37,7 +37,7 @@ class TestCommand extends EnDaftCommand {
 
   @override
   Future<bool> run() async {
-    final bLogger = logger.collapsibleBlock("🤖 Processing ${'Test'.green()}");
+    final bLogger = logger.collapsibleBlock("🤖 Processing Test");
     final targets = Queue<String>.from(
         await Utils.findFiles(matcher: RegExps.filePubSpecYaml).toList().then(
             (files) => files

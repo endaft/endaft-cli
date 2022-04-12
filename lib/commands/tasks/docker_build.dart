@@ -33,7 +33,7 @@ class DockerBuildTask extends TaskCommand {
     final endaftDir = Utils.pathFromRoot(KnownPaths.endaft);
     final dockerDir = path.relative(endaftDir);
 
-    blockLogger.printBlock("🧱 Building ${imageName.green()} image", inRs);
+    blockLogger.printBlock("🧱 Building $imageName image", inRs);
     final dockerArgs = [
       'build',
       '-q',

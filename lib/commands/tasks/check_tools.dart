@@ -18,7 +18,7 @@ class CheckToolsTask extends TaskCommand {
 
     List<bool> results = [];
     for (var tool in tools) {
-      final closer = logger.printFixed('👀 Looking for ${tool.green()}', inRs);
+      final closer = logger.printFixed('👀 Looking for $tool', inRs);
       results.add(closer(Utils.isCommand(tool)));
     }
 

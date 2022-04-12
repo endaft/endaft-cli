@@ -44,7 +44,7 @@ class CheckCommand extends EnDaftCommand {
     if (!result) {
       logger.printWarn(
           'Some errors can be fixed automatically using the '
-          '${'endaft check --fix'.bold()}.',
+          '${'endaft check --fix'}.',
           inBl);
     }
 
