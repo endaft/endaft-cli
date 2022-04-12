@@ -127,7 +127,8 @@ class Utils {
 
   /// Checks if [command] is executable on this system.
   static bool isCommand(String command) {
-    final result = Process.runSync('command', ['-v', command]);
+    final result =
+        Process.runSync('command', ['-v', command], runInShell: true);
     return result.exitCode == 0 && result.stdout.toString().trim().isNotEmpty;
   }
 
