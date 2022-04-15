@@ -40,7 +40,7 @@ class DockerRunTask extends TaskCommand {
       '$userDir:/home/user',
       '-e',
       'CI=false',
-      '-it',
+      '-i',
       imageName.toLowerCase()
     ];
     final process = await Process.start('docker', args,
