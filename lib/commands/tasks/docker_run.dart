@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
-
 import 'base.dart';
 
 class DockerRunTask extends TaskCommand {
@@ -26,8 +24,7 @@ class DockerRunTask extends TaskCommand {
 
   @override
   Future<bool> run() async {
-    final rootDir = Directory.current.path;
-    final imageName = "${path.basename(rootDir)}-builder";
+    final imageName = "ghcr.io/endaft/builder";
 
     bool hasImage = Utils.dockerImageExists(imageName);
     logger.printFixed("🐳 Running in $imageName")(hasImage);
@@ -36,7 +33,7 @@ class DockerRunTask extends TaskCommand {
       'run',
       '--rm',
       '--name',
-      imageName.toLowerCase(),
+      'endaft-builder',
       '-v',
       '$rootDir:/home/code',
       '-v',

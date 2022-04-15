@@ -43,27 +43,27 @@ class DockerCommand extends EnDaftCommand {
 
   @override
   List<TaskCommand> revealTasks() => [
-        DockerBuildTask(this, logger),
+        // DockerBuildTask(this, logger),
         DockerRunTask(this, logger),
       ];
 
   @override
   Future<bool> run() async {
     final args = argResults!;
-    final bool useForce = args['force'];
-    final bool buildOnly = args['build-only'];
-    final String imageNameFallback = "${path.basename(rootDir)}-builder";
+    /* final bool useForce = args['force'];
+    final bool buildOnly = args['build-only']; */
+    final String imageNameFallback = "ghcr.io/endaft/builder";
     final String imageName = args['name'] ?? imageNameFallback;
 
-    var _sequence = <TaskCommand>[];
+/*     var _sequence = <TaskCommand>[];
     bool hasImage = Utils.dockerImageExists(imageName);
     if (!hasImage || buildOnly || useForce) {
       _sequence.add(DockerBuildTask(this, logger));
     }
     if (!buildOnly) {
       _sequence.add(DockerRunTask(this, logger));
-    }
-    useSequence(_sequence);
+    } */
+    useSequence([DockerRunTask(this, logger)]);
     bool result = await runSequence({
       DockerRunTask.taskName: {'name': imageName},
       DockerBuildTask.taskName: {'name': imageName},
