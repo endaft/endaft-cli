@@ -63,7 +63,6 @@ class DartTestTask extends TaskCommand {
 
     logger.printFixed('🦾 Formatting coverage', ind);
     final List<String> formatArgs = [
-      '--packages=.packages',
       '--base-directory=${path.normalize(dirPath)}',
       '--report-on=lib',
       '--lcov',
