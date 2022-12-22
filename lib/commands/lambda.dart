@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:path/path.dart' as path;
 
 import 'tasks/all.dart';
@@ -46,7 +47,8 @@ class LambdaCommand extends EnDaftCommand {
         .listSync(recursive: false, followLinks: false)
         .whereType<Directory>()
         .map((e) => e.path)
-        .toList(growable: false);
+        .toList(growable: false)
+        .sorted();
     logger.printDone('found ${lambdaRoots.length}');
 
     final ind = '   ';

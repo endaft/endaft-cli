@@ -25,7 +25,14 @@ class BuildCommand extends EnDaftCommand {
   @override
   Future<bool> run() async {
     final runner = super.runner!;
-    final dockerSeq = ['check', 'validate', 'shared', 'docker', 'aggregate'];
+    final dockerSeq = [
+      'check',
+      'validate',
+      'shared',
+      'docker',
+      'aggregate',
+      'deps',
+    ];
     final buildSeq = ['check', 'lambda'];
     final execSeq = (Utils.isInDocker ? buildSeq : dockerSeq);
 
