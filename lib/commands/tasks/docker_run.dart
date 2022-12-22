@@ -26,6 +26,7 @@ class DockerRunTask extends TaskCommand {
   Future<bool> run() async {
     final imageName = "ghcr.io/endaft/builder";
 
+    String envCi = String.fromEnvironment("CI", defaultValue: 'false');
     bool hasImage = Utils.dockerImageExists(imageName);
     logger.printFixed("🐳 Running in $imageName")(hasImage);
 
@@ -36,10 +37,8 @@ class DockerRunTask extends TaskCommand {
       'endaft-builder',
       '-v',
       '$rootDir:/home/code',
-      '-v',
-      '$userDir:/home/user',
       '-e',
-      'CI=false',
+      'CI=$envCi',
       '-i',
       imageName.toLowerCase()
     ];

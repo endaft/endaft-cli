@@ -40,8 +40,6 @@ class DockerBuildTask extends TaskCommand {
       '--rm',
       '--build-arg',
       'SOURCE_PATH=$rootDir',
-      '--build-arg',
-      'USER_HOME=$userDir',
       '-t',
       imageName.toLowerCase(),
       '-f',
