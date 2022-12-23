@@ -26,8 +26,8 @@ class PubGetTask extends TaskCommand {
     final baseName = path.basename(dirPath);
     logger.printFixed('👇 Dependencies for $baseName', ind);
 
-    final dartArgs = ['pub', 'get'];
-    final result = Process.runSync('dart', dartArgs, workingDirectory: dirPath);
+    final dartArgs = ['pub', 'get', '-C $dirPath'];
+    final result = Process.runSync('dart', dartArgs);
 
     return Utils.handleProcessResult(result, logger, inRs + inRs);
   }

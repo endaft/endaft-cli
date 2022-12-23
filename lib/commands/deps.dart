@@ -45,9 +45,7 @@ class DepsCommand extends EnDaftCommand {
         ind,
       );
 
-      final fullSequence = [PubGetTask(this, blockLogger)];
-      useSequence(fullSequence);
-
+      useSequence([PubGetTask(this, blockLogger)]);
       result = await runSequence({
         PubGetTask.taskName: {'target': lambdaDir, 'indent': subInd},
       });

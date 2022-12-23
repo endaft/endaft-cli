@@ -183,8 +183,13 @@ class Utils {
     } else {
       logger.printFailed('code ${result.exitCode}');
 
-      String logs = result.stderr.toString();
-      if (logs.isEmpty) logs = result.stdout.toString();
+      String logs = '''
+Error:
+  ${result.stderr.toString()}
+
+Output:
+  ${result.stdout.toString()}
+  ''';
       logger.printPassThru(logs, indent);
     }
 
