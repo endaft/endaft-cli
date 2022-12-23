@@ -2,6 +2,9 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+test: all
+	echo "Tests should be run, do something about that!"
+
 deps: clean
 	dart pub get >>/dev/null
 

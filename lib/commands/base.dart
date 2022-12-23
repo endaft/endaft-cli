@@ -76,12 +76,12 @@ abstract class EnDaftCommand extends Command<bool> {
   Future<bool> runSequence(
       [Map<String, Map<String, dynamic>> args = const {}]) async {
     bool result = true;
-    final _def = <String, dynamic>{};
+    final def = <String, dynamic>{};
     for (var task in _sequence) {
       if (!result) {
         break;
       } else {
-        final ta = (args.containsKey(task.name) ? args[task.name] : _def)!;
+        final ta = (args.containsKey(task.name) ? args[task.name] : def)!;
         result = await task.runWith(ta) ?? false;
       }
     }
@@ -91,12 +91,12 @@ abstract class EnDaftCommand extends Command<bool> {
   /// Executes this commands [sequence] invoking the provider for each task's args.
   Future<bool> runSequenceSame(ArgsProvider provider) async {
     bool result = true;
-    final _def = <String, dynamic>{};
+    final def = <String, dynamic>{};
     for (var task in _sequence) {
       if (!result) {
         break;
       } else {
-        final ta = (provider(task.name) ?? _def);
+        final ta = (provider(task.name) ?? def);
         result = await task.runWith(ta) ?? false;
       }
     }
