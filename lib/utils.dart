@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:yaml/yaml.dart';
 import 'package:path/path.dart' as path;
-import 'package:json_schema2/json_schema2.dart';
+import 'package:json_schema/json_schema.dart';
 
 import 'enums.dart';
 import 'logger.dart';
@@ -122,7 +122,7 @@ class Utils {
       creator(file: schemaFile);
     }
     final schemaJson = Utils.readFile(file: schemaFile, parser: parser);
-    return JsonSchema.createSchema(schemaJson);
+    return JsonSchema.create(schemaJson);
   }
 
   /// Checks if [command] is executable on this system.

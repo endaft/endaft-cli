@@ -61,6 +61,8 @@ jobs:
 
       - name: 🚀 Publish
         if: ${{ !env.ACT }}
-        uses: RatakondalaArun/pub.dev-cd@v1.0.0
+        uses: k-paxian/dart-package-publisher@v1.6
         with:
-          creditionals: ${{secrets.PUB_DEV_CREDENTIALS}}
+          accessToken: ''
+          refreshToken: ''
+          credentialJson: ${{secrets.PUB_DEV_CREDENTIALS}}

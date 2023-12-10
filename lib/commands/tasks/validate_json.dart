@@ -1,5 +1,5 @@
 import 'package:path/path.dart' as path;
-import 'package:json_schema2/json_schema2.dart';
+import 'package:json_schema/json_schema.dart';
 
 import 'base.dart';
 
@@ -34,7 +34,11 @@ class ValidateJsonTask extends TaskCommand {
         path.dirname(sharedFile.path), path.basename(sharedFile.path));
     final sharedJson =
         Utils.readFile(file: sharedFile, parser: FileParsers.jsonParser);
-    final sharedErrors = sharedSchema.validateWithErrors(sharedJson);
+    final validationResult = sharedSchema.validate(sharedJson);
+    final sharedErrors = [
+      ...validationResult.errors,
+      ...validationResult.warnings,
+    ];
 
     final result = closer(sharedErrors.isEmpty);
     if (!result) {
@@ -61,7 +65,12 @@ class ValidateJsonTask extends TaskCommand {
         .listen((file) {
       final fileName = path.dirname(file.path);
       final json = Utils.readFile(file: file, parser: FileParsers.jsonParser);
-      final errors = lambdaSchema.validateWithErrors(json);
+
+      final validationResult = lambdaSchema.validate(json);
+      final errors = [
+        ...validationResult.errors,
+        ...validationResult.warnings,
+      ];
       allErrors[fileName] = errors;
     }).asFuture();
 

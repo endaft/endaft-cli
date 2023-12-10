@@ -4,7 +4,7 @@ import 'dart:convert';
 
 typedef LogFunc = void Function(String message);
 
-class LogPipe extends StreamConsumer<List<int>> {
+class LogPipe implements StreamConsumer<List<int>> {
   LogPipe(this.logger);
 
   final LogFunc logger;
