@@ -39,7 +39,6 @@ class DartTestTask extends TaskCommand {
     logger.printFixed('🏃 Running tests', ind);
 
     final List<String> dartArgs = [
-      'run',
       'test',
       '--chain-stack-traces',
       ...(usesCover ? ['--coverage=coverage'] : []),
