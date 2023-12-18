@@ -132,6 +132,23 @@ class Utils {
     return result.exitCode == 0 && result.stdout.toString().trim().isNotEmpty;
   }
 
+  /// Checks if [command] is executable on this system.
+  static bool installCommand(String command) {
+    String installCmd = '';
+    List<String> installArgs = [];
+    switch (command) {
+      case 'collect_coverage':
+      case 'format_coverage':
+        installCmd = 'dart';
+        installArgs = ['pub', 'global', 'activate', 'coverage'];
+        break;
+      default:
+        return false;
+    }
+    final result = Process.runSync(installCmd, installArgs, runInShell: true);
+    return result.exitCode == 0 && result.stdout.toString().trim().isNotEmpty;
+  }
+
   /// Get the full path to [command] on this system, or null if the [command] is not available.
   static String? toolPath(String command) {
     final result = Process.runSync('command', ['-v', command]);

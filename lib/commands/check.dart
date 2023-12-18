@@ -38,6 +38,7 @@ class CheckCommand extends EnDaftCommand {
     ]);
 
     bool result = await runSequence({
+      CheckToolsTask.taskName: {'fix': useFix},
       CheckFSTask.taskName: {'fix': useFix}
     });
 

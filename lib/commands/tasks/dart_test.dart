@@ -60,7 +60,7 @@ class DartTestTask extends TaskCommand {
     // Early bail-out if there's nothing we can do here
     if (!usesCover) return true;
 
-    logger.printFixed('🦾 Formatting coverage', ind);
+    logger.printFixed('🦾 Formatting coverage in $dirPath', ind);
     final List<String> formatArgs = [
       '--base-directory=${path.normalize(dirPath)}',
       '--report-on=lib',
