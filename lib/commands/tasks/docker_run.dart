@@ -26,6 +26,7 @@ class DockerRunTask extends TaskCommand {
   Future<bool> run() async {
     final imageName = "ghcr.io/endaft/builder";
 
+    String tempDir = Utils.getTempPath();
     String envCi = String.fromEnvironment("CI", defaultValue: 'false');
     bool hasImage = Utils.dockerImageExists(imageName);
     logger.printFixed("🐳 Running in $imageName")(hasImage);
@@ -37,6 +38,8 @@ class DockerRunTask extends TaskCommand {
       'endaft-builder',
       '-v',
       '$rootDir:/home/code',
+      '-v',
+      '$tempDir:/var/dart_pub_cache',
       '-e',
       'CI=$envCi',
       '-i',
@@ -45,6 +48,12 @@ class DockerRunTask extends TaskCommand {
     final process = await Process.start('docker', args,
         workingDirectory: rootDir, mode: ProcessStartMode.inheritStdio);
     final result = await process.exitCode == 0;
+
+    try {
+      Directory(tempDir).deleteSync(recursive: true);
+    } catch (e) {
+      logger.printFixed("🐳 Failed to delete temp dir: $tempDir");
+    }
 
     return result;
   }
