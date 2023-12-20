@@ -26,8 +26,9 @@ class PubGetTask extends TaskCommand {
     final baseName = path.basename(dirPath);
     logger.printFixed('👇 Dependencies for $baseName', ind);
 
-    final dartArgs = ['pub', 'get', '-C $dirPath'];
-    final rawResult = Process.runSync('dart', dartArgs);
+    final dartArgs = ['pub', 'get'];
+    final rawResult =
+        Process.runSync('dart', dartArgs, workingDirectory: dirPath);
     final result = ProcessResult(
       rawResult.pid,
       0, // Force success for best effort; it mysteriously fails in workflows

@@ -131,6 +131,7 @@ class DartTestTask extends TaskCommand {
 
   @override
   Future<bool> run() async {
+    final indAug = '   ';
     final dirPath = targetDir;
     final ind = args['indent'] ?? inRs;
     final baseName = path.basename(dirPath);
@@ -152,13 +153,13 @@ class DartTestTask extends TaskCommand {
       return true;
     }
 
-    bool result = _runTests(blkLogger, useCoverage, dirPath, ind + ind);
+    bool result = _runTests(blkLogger, useCoverage, dirPath, ind + indAug);
     if (result) {
       result = _formatLcov(
         blkLogger,
         useCoverage,
         baseName,
-        ind + ind,
+        ind + indAug,
         dirPath,
       );
     }
@@ -167,7 +168,7 @@ class DartTestTask extends TaskCommand {
         blkLogger,
         useCoverage,
         baseName,
-        ind + ind,
+        ind + indAug,
         dirPath,
       );
     }

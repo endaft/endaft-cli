@@ -85,7 +85,13 @@ class Utils {
 
   /// Indicates whether or not a docker image exists by [name]
   static bool dockerImageExists(String name) {
-    final dockerArgs = ['image', 'ls', name, '--format', '"{{.Repository}}"'];
+    final dockerArgs = [
+      'image',
+      'ls',
+      name,
+      '--format',
+      '"{{.Repository}}:{{.Tag}}"'
+    ];
     final result = Process.runSync('docker', dockerArgs);
     final success = result.exitCode == 0;
     final text = result.stdout.toString().trim().replaceAll("\"", "");

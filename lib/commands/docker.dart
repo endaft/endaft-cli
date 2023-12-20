@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:path/path.dart' as path;
-
 import 'tasks/all.dart';
 
 class DockerCommand extends EnDaftCommand {
@@ -17,28 +13,11 @@ class DockerCommand extends EnDaftCommand {
 
   DockerCommand(Logger logger)
       : super(logger: logger, tools: Utils.isInDocker ? [] : ['docker']) {
-    var workDir = Directory.current.path;
-    var imageName = "${path.basename(workDir)}-builder";
-
-    argParser
-      ..addOption(
-        'name',
-        abbr: 'n',
-        help: "The name of the docker builder image. Defaults to your workspace"
-            "root directory name ($imageName).",
-      )
-      ..addFlag(
-        'build-only',
-        abbr: 'b',
-        defaultsTo: false,
-        help: "Only build the docker image, don't automatically run it.",
-      )
-      ..addFlag(
-        'force',
-        abbr: 'f',
-        defaultsTo: false,
-        help: "Forces an image build even if one already exists.",
-      );
+    argParser.addOption(
+      'useClassic',
+      abbr: 'c',
+      help: "If the Amazon Linux 2023-based image should be used or not.",
+    );
   }
 
   @override
@@ -47,12 +26,11 @@ class DockerCommand extends EnDaftCommand {
   @override
   Future<bool> run() async {
     final args = argResults!;
-    final String imageNameFallback = "ghcr.io/endaft/builder";
-    final String imageName = args['name'] ?? imageNameFallback;
+    final bool useClassic = args['useClassic'] ?? false;
 
     useSequence([DockerRunTask(this, logger)]);
     bool result = await runSequence({
-      DockerRunTask.taskName: {'name': imageName},
+      DockerRunTask.taskName: {'use2023': !useClassic},
     });
 
     return result;

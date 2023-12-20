@@ -24,30 +24,35 @@ class DockerRunTask extends TaskCommand {
 
   @override
   Future<bool> run() async {
-    final imageName = "ghcr.io/endaft/builder";
+    final bool use2023 = args['use2023'];
+    final String imageTag = use2023 ? '-2023' : '';
+    final imageName = "ghcr.io/endaft/builder:latest$imageTag";
 
     String tempDir = Utils.getTempPath();
     String envCi = String.fromEnvironment("CI", defaultValue: 'false');
     bool hasImage = Utils.dockerImageExists(imageName);
     logger.printFixed("🐳 Running in $imageName")(hasImage);
 
-    final args = [
+    final dockerArgs = [
       'run',
       '--rm',
       '--name',
-      'endaft-builder',
+      'endaft-builder$imageTag',
       '-v',
       '$rootDir:/home/code',
-      '-v',
-      '$tempDir:/var/dart_pub_cache',
       '-e',
       'CI=$envCi',
       '-i',
       imageName.toLowerCase()
     ];
-    final process = await Process.start('docker', args,
+    final process = await Process.start('docker', dockerArgs,
         workingDirectory: rootDir, mode: ProcessStartMode.inheritStdio);
     final result = await process.exitCode == 0;
+
+    if (!result) {
+      logger.printFixed(
+          "🐳 Failed to run docker build using:\n\tdocker ${dockerArgs.join(" ")}\n");
+    }
 
     try {
       Directory(tempDir).deleteSync(recursive: true);
