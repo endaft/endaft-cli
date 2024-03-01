@@ -32,6 +32,13 @@ class DartCompileTask extends TaskCommand {
     final dartArgs = ['compile', 'exe', 'lib/main.dart', '-o', relOutPath];
     final pRes = Process.runSync('dart', dartArgs, workingDirectory: dirPath);
 
+    if (!Platform.isWindows && File(relOutPath).existsSync()) {
+      final chmodRes = Process.runSync('chmod', ['+x', relOutPath]);
+      if (chmodRes.exitCode != 0) {
+        logger.printFixed('Failed to make $outputName executable', ind);
+      }
+    }
+
     return Utils.handleProcessResult(pRes, logger, '          ', (code) {
       final outputFile = File(relOutPath);
       final success = code == 0 && outputFile.existsSync();
