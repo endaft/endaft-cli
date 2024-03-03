@@ -22,7 +22,7 @@ void main() {
       expect(
           line,
           contains(
-              'Operations and utilities for the EnDaft (Dart, Flutter, AWS, Terraform) solution templates.'));
+              'Operations and utilities for the EnDaft (Dart, AWS, Flutter, Terraform) solution templates.'));
       expect(
           line,
           contains(
