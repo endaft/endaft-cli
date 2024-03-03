@@ -22,7 +22,6 @@ abstract class EnDaftCommand extends Command<bool> {
         )
         ..addOption('packages');
     }
-    _argResults = argParser.parse(Platform.executableArguments);
   }
 
   /// Gets the normalized active root directory for the command

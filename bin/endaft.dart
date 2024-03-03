@@ -7,7 +7,7 @@ void main(List<String> args) async {
   final logger = Logger();
   try {
     final runner = CommandRunner<bool>("endaft",
-        "Operations and utilities for the EnDaft (Dart, Flutter, AWS, Terraform) solution templates.",
+        "Operations and utilities for the EnDaft (Dart, AWS, Flutter, Terraform) solution templates.",
         usageLineLength: 120)
       ..addCommand(TestCommand(logger))
       ..addCommand(BuildCommand(logger))

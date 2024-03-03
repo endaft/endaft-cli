@@ -13,7 +13,7 @@ class DockerCommand extends EnDaftCommand {
 
   DockerCommand(Logger logger)
       : super(logger: logger, tools: Utils.isInDocker ? [] : ['docker']) {
-    argParser.addOption(
+    argParser.addFlag(
       'useClassic',
       abbr: 'c',
       help: "If the Amazon Linux 2023-based image should be used or not.",
@@ -26,7 +26,7 @@ class DockerCommand extends EnDaftCommand {
   @override
   Future<bool> run() async {
     final args = argResults!;
-    final bool useClassic = args['useClassic'] ?? false;
+    final bool useClassic = args.wasParsed('useClassic');
 
     useSequence([DockerRunTask(this, logger)]);
     bool result = await runSequence({

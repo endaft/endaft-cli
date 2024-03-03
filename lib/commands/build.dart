@@ -41,7 +41,11 @@ class BuildCommand extends EnDaftCommand {
       final cmd = runner.commands[step];
       if (cmd == null) throw Exception('A sequenced command is missing! 🪲');
 
-      final args = [cmd.name, ...baseArgs];
+      final cmdArgs = baseArgs.where((argName) =>
+          cmd.argParser
+              .findByNameOrAlias(argName.replaceAll(RegExp('-'), '')) !=
+          null);
+      final args = [cmd.name, ...cmdArgs];
       final result = (await runner.run(args)) ?? false;
       if (!result) throw Exception('Step Failed: $step 😢');
     }
